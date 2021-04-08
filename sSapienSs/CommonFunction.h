@@ -34,6 +34,8 @@ const int ATK_DISTANT = 320;
 
 //map variables
 #define TILE_SIZE  64
+#define HERO_SIZE_X 64
+#define HERO_SIZE_Y 64
 
 typedef struct Map
 {
