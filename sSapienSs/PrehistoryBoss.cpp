@@ -537,6 +537,17 @@ void PrehistoryBossManage::SetWeaponStatus(int loaivukhi, int status, int status
 					is_attacked = 1;
 				}
 			}
+			else if (loaivukhi == tree)
+			{
+				if (status2 == 1)
+				{
+					if (status >= 3 && status <= 7)is_attacked = 1;
+				}
+				else if (status2 == 2)
+				{
+					if (status >= 6 && status <= 9)is_attacked = 1;
+				}
+			}
 		}
 	}
 }

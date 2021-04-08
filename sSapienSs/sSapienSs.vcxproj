@@ -152,6 +152,7 @@
     <ClCompile Include="kangaru.cpp" />
     <ClCompile Include="Load.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MyHP.cpp" />
     <ClCompile Include="NormalEnemies.cpp" />
     <ClCompile Include="PrehistoryBoss.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Hero.h" />
     <ClInclude Include="kangaru.h" />
     <ClInclude Include="Load.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="MyHP.h" />
     <ClInclude Include="NormalEnemies.h" />
     <ClInclude Include="PrehistoryBoss.h" />

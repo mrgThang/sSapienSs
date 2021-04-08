@@ -18,6 +18,7 @@
 #include "Button.h"
 #include "PrehistoryBoss.h"
 #include "gate.h"
+#include "Menu.h"
 
 enum
 {
@@ -43,6 +44,7 @@ Button gStartButton;
 Button gOptionButton;
 Button gExitButton;
 PrehistoryBossManage gPrehistoryBossManage;
+MenuManage gMenuManage;
 
 bool init()
 {
@@ -120,6 +122,7 @@ void free_texture()
 	for (int i = 0; i < gRhino.size(); ++i)gRhino[i].free();
 	for (int i = 0; i < gKangaru.size(); ++i)gKangaru[i].free();
 	gPrehistoryBossManage.~PrehistoryBossManage();
+	gMenuManage.~MenuManage();
 }
 
 void close()
@@ -305,11 +308,17 @@ bool Load_Menu()
 	//load background
 	success = min(success, gBackground.LoadFromFile("background/MenuBackground.png",gRenderer));
 
+	//load start button
 	success = min(success, gStartButton.LoadFromFile("Button/StartButton.png", gRenderer));
 
+	//load option button
 	success = min(success, gOptionButton.LoadFromFile("Button/OptionButton.png", gRenderer));
 
+	//load exit button
 	success = min(success, gExitButton.LoadFromFile("Button/ExitButton.png", gRenderer));
+
+	//load manage animation menu
+	success = min(success, gMenuManage.Load(gRenderer));
 
 	return success;
 }
@@ -318,6 +327,7 @@ bool Load_Game_Over()
 {
 	bool success = 1;
 
+	//load gameover background
 	success = min(success, gBackground.LoadFromFile("background/GameOver.png", gRenderer));
 
 	return success;
@@ -327,28 +337,36 @@ bool Load_Boss_Prehistory_Map()
 {
 	bool success = 1;
 
+	//load boss action
 	success = min(success, gPrehistoryBossManage.Load(gRenderer));
 	gPrehistoryBossManage.SetMyHP(3);
 	gPrehistoryBossManage.ResetStatus();
 
+	//load hero
 	success = min(success, gHero.LoadFromFile("hero/hero_run2.png",gRenderer));
 	gHero.SetRect(0, 64*8);
 
+	//load spear
 	success = min(success, gSpear.LoadFromFile("sword/spear.png",gRenderer));
 
+	//load tree
+	success = min(success, gSword.LoadFromFile("sword/sword3.png", gRenderer));
+
+	//load hp
 	success = min(success, gHP.LoadFromFile("heartpoint/myHP.png",gRenderer));
 	gHP.SetRect(SCREEN_WIDTH - 3 * 64, 0);
 
+	//load voidgate
 	success = min(success, gGate.LoadFromFile("gate/voidgate.png",gRenderer	));
 	gGate.SetRect(18*64, 8*64);
 
+	//load background
 	success = min(success, gBackground.LoadFromFile("background/meadow.png",gRenderer));
 
+	//load gamemap
 	gGamemap.StartAgain();
 	gGamemap.LoadMap("tile/PrehistoricBossTile/boss.txt",20,11);
 	gGamemap.LoadTileTexture(gRenderer, "tile/PrehistoricBossTile/", 16);
-
-
 
 	return success;
 }

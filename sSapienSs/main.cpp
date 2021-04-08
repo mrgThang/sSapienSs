@@ -33,6 +33,9 @@ void Run_Menu()
 	gOptionButton.HandleEvent(gRenderer, &gEvent);
 	gExitButton.HandleEvent(gRenderer, &gEvent);
 
+	//render menu animation
+	gMenuManage.HandleEvent(gRenderer);
+
 	//Update screen
 	SDL_RenderPresent(gRenderer);
 
