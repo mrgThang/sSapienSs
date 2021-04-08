@@ -153,7 +153,7 @@ bool Load_NorMal_Prehistory_Map()
 	gGamemap.LoadTileTexture(gRenderer,"tile/PrehistoricTile/",11);
 
 	//load hero
-    success = min(success,gHero.LoadFromFile("hero/hero_run2.png", gRenderer));
+    success = min(success,gHero.LoadFromFile("hero/hero.png", gRenderer));
 	gHero.SetRect(0, 0);
 
     //load bullet
@@ -343,7 +343,7 @@ bool Load_Boss_Prehistory_Map()
 	gPrehistoryBossManage.ResetStatus();
 
 	//load hero
-	success = min(success, gHero.LoadFromFile("hero/hero_run2.png",gRenderer));
+	success = min(success, gHero.LoadFromFile("hero/hero.png",gRenderer));
 	gHero.SetRect(0, 64*8);
 
 	//load spear

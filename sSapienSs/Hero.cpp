@@ -101,7 +101,7 @@ void Hero::MoveUp(const Uint8* currentKeyStates, int& hero_jump_condition, int& 
         if (hero_jump_condition == 0)
         {
             hero_jump_condition = 1;
-            hero_jump_max = max(0, my_rect.y - 20 * FOOT_DISTANT);
+            hero_jump_max = max(0, my_rect.y - 24 * FOOT_DISTANT);
         }
     }
     if (hero_jump_condition == 1 && my_rect.y > hero_jump_max)
