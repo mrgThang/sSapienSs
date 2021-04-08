@@ -13,7 +13,8 @@ const enum
 	run_menu = 1,
 	run_game_over = 2,
 	run_normal_prehistory = 3,
-	run_boss_prehistory = 4
+	run_boss_prehistory = 4,
+	run_hihi = 5
 };
 
 void Run_Menu()
