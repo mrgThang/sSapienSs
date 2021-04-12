@@ -19,6 +19,7 @@
 #include "PrehistoryBoss.h"
 #include "gate.h"
 #include "Menu.h"
+#include "ControlGame.h"
 
 enum
 {
@@ -45,6 +46,7 @@ Button gOptionButton;
 Button gExitButton;
 PrehistoryBossManage gPrehistoryBossManage;
 MenuManage gMenuManage;
+ControlGameManage gControlGameManage;
 
 bool init()
 {
@@ -123,6 +125,7 @@ void free_texture()
 	for (int i = 0; i < gKangaru.size(); ++i)gKangaru[i].free();
 	gPrehistoryBossManage.~PrehistoryBossManage();
 	gMenuManage.~MenuManage();
+	gControlGameManage.~ControlGameManage();
 }
 
 void close()
@@ -291,6 +294,9 @@ bool Load_NorMal_Prehistory_Map()
 		gKangaru[i].SetPosition(kangaru_pos_x[i] * TILE_SIZE, kangaru_pos_y[i] * TILE_SIZE);
 	}
 
+	//load control game
+	success = min (success,gControlGameManage.Load(gRenderer));
+
 	//delete weapon
 	while (Weapon.size())
 	{
@@ -367,6 +373,9 @@ bool Load_Boss_Prehistory_Map()
 	gGamemap.StartAgain();
 	gGamemap.LoadMap("tile/PrehistoricBossTile/boss.txt",20,11);
 	gGamemap.LoadTileTexture(gRenderer, "tile/PrehistoricBossTile/", 16);
+
+	//load control game
+	success = min(success, gControlGameManage.Load(gRenderer));
 
 	return success;
 }

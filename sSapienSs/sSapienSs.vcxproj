@@ -147,6 +147,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="chest.cpp" />
     <ClCompile Include="CommonFunction.cpp" />
+    <ClCompile Include="ControlGame.cpp" />
     <ClCompile Include="gate.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="kangaru.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="chest.h" />
     <ClInclude Include="CommonFunction.h" />
+    <ClInclude Include="ControlGame.h" />
     <ClInclude Include="gate.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="kangaru.h" />

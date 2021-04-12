@@ -5,6 +5,8 @@ int dem = 0;
 int current_weapon = -1;
 SDL_Event gEvent;
 bool key_v = 0 ;
+bool key_space = 0;
+bool key_esc = 0;
 int bonusHP[12];
 bool quit = 0;
 
@@ -13,7 +15,8 @@ const enum
 	run_menu = 1,
 	run_game_over = 2,
 	run_normal_prehistory = 3,
-	run_boss_prehistory = 4
+	run_boss_prehistory = 4,
+	game_pause = 5
 };
 
 void Run_Menu()
@@ -74,140 +77,160 @@ void Run_Game_Over()
 
 void Run_Normal_Prehistory()
 {
-	//clear screen
-	SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
-	SDL_RenderClear(gRenderer);
+	bool pause_status = gControlGameManage.GetStatus();
 
-	//render background
-	gBackground.Render(gRenderer, 0, 0);
-
-	if (hero_start_y >= 13 * 64)MYHP = 0;
-
-	//hero motion
-	if (MYHP == 0)
+	if (pause_status == 0)
 	{
-		screen_status = run_game_over;
-		dem = 0;
-	}
-	gHero.TakeHP(MYHP,1);
-	gHero.HandleEvent(hero_jump_condition, hero_jump_max, max_prehistory_normal_map_move);
+		//clear screen
+		SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+		SDL_RenderClear(gRenderer);
 
-	//Render chest and chest motion + weapon in chest
-	int status_mov = gGamemap.GetStatusMov();
-	for (int i = 0; i < gChest.size(); ++i)
-	{
-		gChest[i].HandleEvent(gRenderer, status_mov);
-		if (gChest[i].Getdk() == 1)
+		//render background
+		gBackground.Render(gRenderer, 0, 0);
+
+		if (hero_start_y >= 13 * 64)MYHP = 0;
+
+		//hero motion
+		if (MYHP == 0)
 		{
-			if (i == 0)
-			{
-				if (Weapon.size() == 0)
-				{
-					Weapon.push_back(tree);
-					SDL_Rect chest_pos = gChest[i].GetRect();
-					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
-				}
-			}
-			else if (i == 1 || i == 2 || i == 3)
-			{
-				if (bonusHP[i] == 0)
-				{
-					if (MYHP < 3)MYHP++;
-					bonusHP[i] = 1;
-				}
-				SDL_Rect chest_pos = gChest[i].GetRect();
-				gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
-			}
-			else if (i == 4)
-			{
-				if (Weapon.size() == 1)
-				{
-					Weapon.push_back(spear);
-					SDL_Rect chest_pos = gChest[i].GetRect();
-					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
-				}
-			}
-			gWeaponInChest[i].HandleEvent(gRenderer, status_mov);
+			screen_status = run_game_over;
+			dem = 0;
 		}
-	}
+		gHero.TakeHP(MYHP, 1);
+		gHero.HandleEvent(hero_jump_condition, hero_jump_max, max_prehistory_normal_map_move);
 
-	//change weapon
-	if (key_v)
-	{
-		if (Weapon.size() > 0)
+		//Render chest and chest motion + weapon in chest
+		int status_mov = gGamemap.GetStatusMov();
+		for (int i = 0; i < gChest.size(); ++i)
 		{
-			for (int i = 0; i < Weapon.size(); ++i)
+			gChest[i].HandleEvent(gRenderer, status_mov);
+			if (gChest[i].Getdk() == 1)
 			{
-				if (current_weapon == Weapon[i])
+				if (i == 0)
 				{
-					if (i == Weapon.size() - 1)
+					if (Weapon.size() == 0)
 					{
-						current_weapon = Weapon[0];
+						Weapon.push_back(tree);
+						SDL_Rect chest_pos = gChest[i].GetRect();
+						gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
 					}
-					else current_weapon = Weapon[i + 1];
-					break;
 				}
-			}
-			if (current_weapon == -1)
-			{
-				current_weapon = Weapon[0];
+				else if (i == 1 || i == 2 || i == 3)
+				{
+					if (bonusHP[i] == 0)
+					{
+						if (MYHP < 3)MYHP++;
+						bonusHP[i] = 1;
+					}
+					SDL_Rect chest_pos = gChest[i].GetRect();
+					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
+				}
+				else if (i == 4)
+				{
+					if (Weapon.size() == 1)
+					{
+						Weapon.push_back(spear);
+						SDL_Rect chest_pos = gChest[i].GetRect();
+						gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
+					}
+				}
+				gWeaponInChest[i].HandleEvent(gRenderer, status_mov);
 			}
 		}
+
+		//change weapon
+		if (key_v)
+		{
+			if (Weapon.size() > 0)
+			{
+				for (int i = 0; i < Weapon.size(); ++i)
+				{
+					if (current_weapon == Weapon[i])
+					{
+						if (i == Weapon.size() - 1)
+						{
+							current_weapon = Weapon[0];
+						}
+						else current_weapon = Weapon[i + 1];
+						break;
+					}
+				}
+				if (current_weapon == -1)
+				{
+					current_weapon = Weapon[0];
+				}
+			}
+		}
+
+		//render waterfall
+		for (int i = 0; i < gWaterFall.size(); ++i)
+			gWaterFall[i].HandleEvent(gRenderer, status_mov);
+
+		//render gate
+		gGate.HandleEvent(gRenderer, status_mov, &gEvent);
+
+		//map motion
+		gGamemap.HandleEvent(125);
+		gGamemap.DrawMap(gRenderer);
+
+		//render hero
+		gHero.Motion(gRenderer);
+
+		int status2 = gHero.GetStatus2();
+
+		//render sword
+		if (tree == current_weapon)gSword.HandleEvent(gRenderer, status2);
+
+		//render spear
+		if (spear == current_weapon)gSpear.HandleEvent(gRenderer, status2);
+
+		//Render enemies
+		int sword_status = gSword.GetSwordStatus();
+		int spear_status = gSpear.GetSpearStatus();
+		int sword_status2 = gSword.GetSwordStatus2();
+		int spear_status2 = gSpear.GetSpearStatus2();
+		status_mov = gGamemap.GetStatusMov();
+
+		//render Rhino
+		for (int i = 0; i < gRhino.size(); ++i)
+		{
+			gRhino[i].HandldeEvent(gRenderer, status_mov, sword_status, sword_status2, spear_status, spear_status2);
+		}
+
+		//render kangaru
+		for (int i = 0; i < gKangaru.size(); ++i)
+		{
+			gKangaru[i].HandldeEvent(gRenderer, status_mov, sword_status, sword_status2, spear_status, spear_status2);
+		}
+
+		//render spider
+		for (int i = 0; i < gSpider.size(); ++i)
+		{
+			gSpider[i].HandldeEvent(gRenderer, status_mov);
+		}
+
+		//renderHP
+		gHP.HandleEvent(gRenderer, MYHP);
+
+		//get hero rect to render bullet
+		SDL_Rect hero_rect = gHero.GetRect();
+		gBullet.HandleEvent(gRenderer, hero_rect);
+
+		//render guide
+		gControlGameManage.HandleEvent(gRenderer, key_space);
 	}
-
-	//render waterfall
-	for (int i = 0; i < gWaterFall.size(); ++i)
-		gWaterFall[i].HandleEvent(gRenderer, status_mov);
-
-	//render gate
-	gGate.HandleEvent(gRenderer, status_mov,&gEvent);
-
-	//map motion
-	gGamemap.HandleEvent(125);
-	gGamemap.DrawMap(gRenderer);
-
-	//render hero
-	gHero.Motion(gRenderer);
-
-	int status2 = gHero.GetStatus2();
-
-	//render sword
-	if (tree == current_weapon)gSword.HandleEvent(gRenderer, status2);
-
-	//render spear
-	if(spear == current_weapon)gSpear.HandleEvent(gRenderer, status2);
-
-	//Render enemies
-	int sword_status = gSword.GetSwordStatus();
-	int spear_status = gSpear.GetSpearStatus();
-	int sword_status2 = gSword.GetSwordStatus2();
-	int spear_status2 = gSpear.GetSpearStatus2();
-	status_mov = gGamemap.GetStatusMov();
-
-	//render Rhino
-	for (int i = 0; i < gRhino.size(); ++i)
+	else
 	{
-		gRhino[i].HandldeEvent(gRenderer, status_mov, sword_status, sword_status2, spear_status, spear_status2);
-	}
+	    //clear screen
+		SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+		SDL_RenderClear(gRenderer);
 
-	//render kangaru
-	for (int i = 0; i < gKangaru.size(); ++i)
-	{
-		gKangaru[i].HandldeEvent(gRenderer, status_mov, sword_status, sword_status2, spear_status, spear_status2);
-	}
+		//render background
+		gBackground.Render(gRenderer, 0, 0);
 
-	//render spider
-	for (int i = 0; i < gSpider.size(); ++i)
-	{
-		gSpider[i].HandldeEvent(gRenderer, status_mov);
-	}
-
-	//renderHP
-	gHP.HandleEvent(gRenderer, MYHP);
-
-	//get hero rect to render bullet
-	SDL_Rect hero_rect = gHero.GetRect();
-	gBullet.HandleEvent(gRenderer, hero_rect);
+		//render guide
+		gControlGameManage.HandleEvent(gRenderer, key_space);
+    }
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
@@ -217,86 +240,115 @@ void Run_Normal_Prehistory()
 		screen_status = run_boss_prehistory;
 		dem = 0;
 	}
+
+	if (key_esc == 1 && pause_status == 1)
+	{
+		screen_status = run_menu;
+		dem = 0;
+	}
 }
 
 void Run_Boss_Prehistory()
 {
 
-	//clear screen
-	SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
-	SDL_RenderClear(gRenderer);
+	bool pause_status = gControlGameManage.GetStatus();
 
-	//render background
-	gBackground.Render(gRenderer, 0, 0);
-
-	//dieu kien chet
-	if (hero_start_y >= 13 * 64)MYHP = 0;
-
-	//hero motion
-	if (MYHP == 0)
+	if (pause_status == 0)
 	{
-		screen_status = run_game_over;
-		dem = 0;
-	}
-	gHero.TakeHP(MYHP,1);
-	gHero.HandleEvent(hero_jump_condition, hero_jump_max, max_prehistory_boss_map_move);
+		//clear screen
+		SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+		SDL_RenderClear(gRenderer);
 
-	//render map
-    gGamemap.HandleEvent(20);
-	gGamemap.DrawMap(gRenderer);
-	int status_mov = gGamemap.GetStatusMov();
+		//render background
+		gBackground.Render(gRenderer, 0, 0);
 
-	//render hero
-	gHero.Motion(gRenderer);
+		//dieu kien chet
+		if (hero_start_y >= 13 * 64)MYHP = 0;
 
-	//render spear
-	int status2 = gHero.GetStatus2();
-
-	//change weapon
-	if (key_v)
-	{
-		if (Weapon.size() > 0)
+		//hero motion
+		if (MYHP == 0)
 		{
-			for (int i = 0; i < Weapon.size(); ++i)
+			screen_status = run_game_over;
+			dem = 0;
+		}
+		gHero.TakeHP(MYHP, 1);
+		gHero.HandleEvent(hero_jump_condition, hero_jump_max, max_prehistory_boss_map_move);
+
+		//render map
+		gGamemap.HandleEvent(20);
+		gGamemap.DrawMap(gRenderer);
+		int status_mov = gGamemap.GetStatusMov();
+
+		//render hero
+		gHero.Motion(gRenderer);
+
+		//render spear
+		int status2 = gHero.GetStatus2();
+
+		//change weapon
+		if (key_v)
+		{
+			if (Weapon.size() > 0)
 			{
-				if (current_weapon == Weapon[i])
+				for (int i = 0; i < Weapon.size(); ++i)
 				{
-					if (i == Weapon.size() - 1)
+					if (current_weapon == Weapon[i])
 					{
-						current_weapon = Weapon[0];
+						if (i == Weapon.size() - 1)
+						{
+							current_weapon = Weapon[0];
+						}
+						else
+						{
+							current_weapon = Weapon[i + 1];
+							break;
+						}
 					}
-					else current_weapon = Weapon[i + 1];
-					break;
+				}
+				if (current_weapon == -1)
+				{
+					current_weapon = Weapon[0];
 				}
 			}
-			if (current_weapon == -1)
-			{
-				current_weapon = Weapon[0];
-			}
 		}
+
+		//render sword
+		if (tree == current_weapon)gSword.HandleEvent(gRenderer, status2);
+
+		//render spear
+		if (spear == current_weapon)gSpear.HandleEvent(gRenderer, status2);
+
+		int sword_status = gSword.GetSwordStatus();
+		int spear_status = gSpear.GetSpearStatus();
+		int sword_status2 = gSword.GetSwordStatus2();
+		int spear_status2 = gSpear.GetSpearStatus2();
+
+		if (gPrehistoryBossManage.GetHP() > 0)
+		{
+			gPrehistoryBossManage.SetWeaponStatus(spear, spear_status, spear_status2);
+			gPrehistoryBossManage.SetWeaponStatus(tree, sword_status, sword_status2);
+			gPrehistoryBossManage.HandleEvent(gRenderer);
+		}
+		else gGate.HandleEvent(gRenderer, status_mov, &gEvent);
+
+		//renderHP
+		gHP.HandleEvent(gRenderer, MYHP);
+
+		//render guide
+		gControlGameManage.HandleEvent(gRenderer, key_space);
 	}
-
-	//render sword
-	if (tree == current_weapon)gSword.HandleEvent(gRenderer, status2);
-
-	//render spear
-	if (spear == current_weapon)gSpear.HandleEvent(gRenderer, status2);
-
-	int sword_status = gSword.GetSwordStatus();
-	int spear_status = gSpear.GetSpearStatus();
-	int sword_status2 = gSword.GetSwordStatus2();
-	int spear_status2 = gSpear.GetSpearStatus2();
-
-	if (gPrehistoryBossManage.GetHP() > 0)
+	else
 	{
-		gPrehistoryBossManage.SetWeaponStatus(spear, spear_status, spear_status2);
-		gPrehistoryBossManage.SetWeaponStatus(tree, sword_status, sword_status2);
-		gPrehistoryBossManage.HandleEvent(gRenderer);
-	}
-	else gGate.HandleEvent(gRenderer,status_mov,&gEvent);
+		//clear screen
+		SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+		SDL_RenderClear(gRenderer);
 
-	//renderHP
-	gHP.HandleEvent(gRenderer, MYHP);
+		//render background
+		gBackground.Render(gRenderer, 0, 0);
+
+		//render guide
+		gControlGameManage.HandleEvent(gRenderer, key_space);
+	}
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
@@ -307,6 +359,11 @@ void Run_Boss_Prehistory()
 		dem = 0;
 	}
 
+	if (key_esc == 1 && pause_status == 1)
+	{
+		screen_status = run_menu;
+		dem = 0;
+	}
 }
 
 int main(int argc, char* argv[])
@@ -338,6 +395,8 @@ int main(int argc, char* argv[])
 				is_quit = true;
 			}
 			if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_v)key_v = 1;
+			if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_SPACE)key_space = 1;
+			if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_ESCAPE)key_esc = 1;
 		}
 
 		if (screen_status == run_menu)
@@ -407,6 +466,8 @@ int main(int argc, char* argv[])
 		}
 
 		key_v = 0;
+		key_space = 0;
+		key_esc = 0;
 
 		if (frameDelay > SDL_GetTicks() - frame_start)
 		{
