@@ -16,6 +16,8 @@ public:
 
 	void Motion(SDL_Renderer* screen, int x, int y);
 
+	void Reset();
+
 private:
 
 	int status;

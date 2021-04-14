@@ -318,6 +318,7 @@ bool Load_NorMal_Prehistory_Map()
 
 	//load coins
 	success = min (success, gCoins.LoadFromFile("coins/coins.png",gRenderer));
+	gCoins.Reset();
 
 	//load font
 	gScore.LoadFont("font/Kingthings.ttf", 32);

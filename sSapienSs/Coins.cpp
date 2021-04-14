@@ -15,6 +15,11 @@ Coins::~Coins()
 	free();
 }
 
+void Coins::Reset()
+{
+	memset(dk, 0, sizeof(dk));
+}
+
 void Coins::HandleEvent(SDL_Renderer* screen, int mmap)
 {
 	dem++;
