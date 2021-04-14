@@ -21,6 +21,7 @@
 #include "Menu.h"
 #include "ControlGame.h"
 #include "Coins.h"
+#include "ScoreBoard.h"
 
 enum
 {
@@ -50,6 +51,7 @@ MenuManage gMenuManage;
 ControlGameManage gControlGameManage;
 Coins gCoins;
 Score gScore;
+TypingManage gTypingManage;
 
 bool init()
 {
@@ -131,6 +133,7 @@ void free_texture()
 	gControlGameManage.~ControlGameManage();
 	gCoins.free();
 	gScore.free();
+	gTypingManage.~TypingManage();
 }
 
 void close()
@@ -146,6 +149,17 @@ void close()
 	IMG_Quit();
 	SDL_Quit();
 	TTF_Quit();
+}
+
+bool Load_Typing_Name()
+{
+	bool success = 1;
+
+	success = min(success, gBackground.LoadFromFile("background/TypingName.png",gRenderer));
+
+	success = min(success, gTypingManage.Load(gRenderer));
+
+	return success;
 }
 
 bool Load_NorMal_Prehistory_Map()
@@ -306,7 +320,7 @@ bool Load_NorMal_Prehistory_Map()
 	success = min (success, gCoins.LoadFromFile("coins/coins.png",gRenderer));
 
 	//load font
-	gScore.LoadFont("font/PEPSI.ttf");
+	gScore.LoadFont("font/Kingthings.ttf", 32);
 
 	//delete weapon
 	while (Weapon.size())

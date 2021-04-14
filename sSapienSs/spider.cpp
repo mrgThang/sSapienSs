@@ -131,6 +131,7 @@ void Spider::Attack(SDL_Renderer* screen)
             if (tick_immortal > last_tick_immortal + 5000)
             {
                 MYHP--;
+                SCORE -= 10;
                 last_tick_immortal = tick_immortal;
             }
         }

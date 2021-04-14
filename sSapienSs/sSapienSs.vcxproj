@@ -159,6 +159,7 @@
     <ClCompile Include="NormalEnemies.cpp" />
     <ClCompile Include="PrehistoryBoss.cpp" />
     <ClCompile Include="rhino.cpp" />
+    <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="spear.cpp" />
     <ClCompile Include="spider.cpp" />
     <ClCompile Include="sword.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="NormalEnemies.h" />
     <ClInclude Include="PrehistoryBoss.h" />
     <ClInclude Include="rhino.h" />
+    <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="spear.h" />
     <ClInclude Include="spider.h" />
     <ClInclude Include="sword.h" />

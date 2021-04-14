@@ -73,5 +73,5 @@ Score::~Score()
 
 void Score::HandleEvent(SDL_Renderer* screen)
 {
-	Render(screen,64 * 5, 0);
+	Render(screen,64 * 3, 0);
 }

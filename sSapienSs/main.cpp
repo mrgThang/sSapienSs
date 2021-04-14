@@ -9,13 +9,16 @@ int bonusHP[12];
 bool quit = 0;
 bool is_had_weapon[12];
 bool key[200];
+std::string last_score_text;
 
 const enum
 {
 	run_menu = 1,
-	run_game_over = 2,
-	run_normal_prehistory = 3,
-	run_boss_prehistory = 4
+	run_typing_name = 2,
+	run_game_over = 3,
+	run_score_board = 4,
+	run_normal_prehistory = 5,
+	run_boss_prehistory = 6
 };
 
 void Run_Menu()
@@ -43,7 +46,7 @@ void Run_Menu()
 
 	if (gStartButton.ReturnPressState() == 1)
 	{
-		screen_status = run_normal_prehistory;
+		screen_status = run_typing_name;
 		dem = 0;
 	}
 
@@ -51,6 +54,29 @@ void Run_Menu()
 	{
 		quit = 1;
 	}
+}
+
+void Run_Typing_Name()
+{
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
+
+	//render background
+	gBackground.Render(gRenderer, 0, 0);
+
+	//render 
+	gTypingManage.HandleEvent(gRenderer,key, &gEvent);
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
+
+	if (gTypingManage.ReturnOver() == 1)
+	{
+		screen_status = run_normal_prehistory;
+		dem = 0;
+	}
+    
 }
 
 void Run_Game_Over()
@@ -112,6 +138,7 @@ void Run_Normal_Prehistory()
 					SDL_Rect chest_pos = gChest[i].GetRect();
 					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
 					is_had_weapon[tree] = 1;
+					SCORE += 10;
 				}
 				else if (i == 1 || i == 2 || i == 3)
 				{
@@ -119,6 +146,7 @@ void Run_Normal_Prehistory()
 					{
 						if (MYHP < 3)MYHP++;
 						bonusHP[i] = 1;
+						SCORE += 10;
 					}
 					SDL_Rect chest_pos = gChest[i].GetRect();
 					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
@@ -129,6 +157,7 @@ void Run_Normal_Prehistory()
 					SDL_Rect chest_pos = gChest[i].GetRect();
 					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
 					is_had_weapon[spear] = 1;
+					SCORE += 10;
 				}
 				gWeaponInChest[i].HandleEvent(gRenderer, status_mov);
 			}
@@ -223,11 +252,15 @@ void Run_Normal_Prehistory()
 
 		timeText.str("");
 
-		timeText << "Score   " << SCORE;
+		timeText << NAME << "  Score: " << SCORE;
         
-		SDL_Color textColor = { 200, 0, 0, 255 };
+		SDL_Color textColor = { 200, 200, 0, 255 };
 
-		gScore.LoadFromRenderedText( timeText.str().c_str(), textColor,gRenderer);
+		if (last_score_text != timeText.str().c_str())
+		{
+			gScore.LoadFromRenderedText(timeText.str().c_str(), textColor, gRenderer);
+			last_score_text = timeText.str().c_str();
+		}
 
 		gScore.HandleEvent(gRenderer);
 	}
@@ -405,7 +438,7 @@ int main(int argc, char* argv[])
 			}
 			if (gEvent.type == SDL_KEYDOWN)
 			{
-				for (int i = 10; i <= 122; ++i)
+				for (int i = 1; i <= 122; ++i)
 				{
 					if (gEvent.key.keysym.sym == i)key[i] = 1;
 				}
@@ -419,11 +452,25 @@ int main(int argc, char* argv[])
 			{
 				if (!Load_Menu()) is_quit = true;
 			}
-			else if(dem >= 10)
+			else if(dem >= 5)
 			{
-				dem = 10;
+				dem = 5;
 				SCORE = 0;
 				Run_Menu();
+			}
+		}
+
+		if (screen_status == run_typing_name)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Typing_Name())is_quit = true;
+			}
+			else if (dem >= 5)
+			{
+				dem = 5;
+				Run_Typing_Name();
 			}
 		}
 
@@ -434,9 +481,9 @@ int main(int argc, char* argv[])
 			{
 				if (!Load_Game_Over())is_quit = true;
 			}
-			else if (dem >= 10)
+			else if (dem >= 5)
 			{
-				dem = 10;
+				dem = 5;
 				Run_Game_Over();
 			}
 		}
@@ -455,9 +502,9 @@ int main(int argc, char* argv[])
 				current_weapon = -1;
 				memset(is_had_weapon,0,sizeof(is_had_weapon));
 			}
-			else if (dem >= 10)
+			else if (dem >= 5)
 			{
-				dem = 10;
+				dem = 5;
 				Run_Normal_Prehistory();
 			}
 		}
@@ -473,14 +520,14 @@ int main(int argc, char* argv[])
 				memset(detect, 0, sizeof(detect));
 				gGate.Start();
 			}
-			else if (dem >= 10)
+			else if (dem >= 5)
 			{
-				dem = 10;
+				dem = 5;
 				Run_Boss_Prehistory();
 			}
 		}
 		
-		for (int i = 10; i <= 122; ++i)
+		for (int i = 1; i <= 122; ++i)
 		{
 			key[i] = 0;
 		}

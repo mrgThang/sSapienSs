@@ -80,4 +80,6 @@ extern std::vector<int> Weapon;
 
 extern int SCORE;
 
+extern std::string NAME;
+
 #endif

@@ -66,7 +66,7 @@ void Kangaru::SetPosition(int x, int y)
 
 void Kangaru::HandldeEvent(SDL_Renderer* screen, int status_mov, int sword_status, int sword_status2, int spear_status, int spear_status2)
 {
-    if (my_rect.y > 13 * TILE_SIZE )
+    if (HP >= 0 && my_rect.y > 13 * TILE_SIZE )
     {
         HP = 0;
     }
@@ -125,6 +125,12 @@ void Kangaru::HandldeEvent(SDL_Renderer* screen, int status_mov, int sword_statu
         HPMotion(screen);
 
         Motion(screen);
+    }
+
+    else if (HP == 0)
+    {
+        HP--;
+        SCORE += 10;
     }
 }
 
@@ -222,6 +228,7 @@ void Kangaru::Attack()
             if (tick_immortal > last_tick_immortal + 5000)
             {
                 MYHP--;
+                SCORE -= 10;
                 last_tick_immortal = tick_immortal;
             }
         }
@@ -247,6 +254,7 @@ void Kangaru::Attack()
         if (tick_immortal > last_tick_immortal + 5000)
         {
             MYHP--;
+            SCORE -= 10;
             last_tick_immortal = tick_immortal;
         }
     }

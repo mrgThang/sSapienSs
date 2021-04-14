@@ -59,7 +59,7 @@ void Rhino::SetPosition(int x, int y)
 
 void Rhino::HandldeEvent(SDL_Renderer* screen, int status_mov, int sword_status, int sword_status2, int spear_status, int spear_status2)
 {
-    if (my_rect.y > 13 * TILE_SIZE)
+    if (HP >= 0 && my_rect.y > 13 * TILE_SIZE)
     {
         HP = 0;
     }
@@ -104,6 +104,11 @@ void Rhino::HandldeEvent(SDL_Renderer* screen, int status_mov, int sword_status,
         HPMotion(screen);
 
         Motion(screen);
+    }
+    else if (HP == 0)
+    {
+        SCORE += 10;
+        HP -= 1;
     }
 }
 
@@ -198,6 +203,7 @@ void Rhino::Attack()
             if (tick_immortal > last_tick_immortal + 5000)
             {
                 MYHP--;
+                SCORE -= 10;
                 last_tick_immortal = tick_immortal;
             }
         }
@@ -223,6 +229,7 @@ void Rhino::Attack()
             if (tick_immortal > last_tick_immortal + 5000)
             {
                 MYHP--;
+                SCORE -= 10;
                 last_tick_immortal = tick_immortal;
             }
         }

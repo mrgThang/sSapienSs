@@ -26,3 +26,5 @@ Uint32 last_tick_immortal;
 std::vector<int> Weapon;
 
 int SCORE = 0;
+
+std::string NAME;

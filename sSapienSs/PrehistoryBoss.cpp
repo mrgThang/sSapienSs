@@ -358,6 +358,7 @@ void Water1::Motion(SDL_Renderer* screen)
 		if (tick_immortal > last_tick_immortal + 5000)
 		{
 			MYHP--;
+			SCORE -= 10;
 			last_tick_immortal = tick_immortal;
 		}
 	}
@@ -395,6 +396,7 @@ void Water2::Motion(SDL_Renderer* screen)
 				if (tick_immortal > last_tick_immortal + 5000)
 				{
 					MYHP--;
+					SCORE -= 10;
 					last_tick_immortal = tick_immortal;
 				}
 			}
@@ -441,6 +443,7 @@ void Sand::Motion(SDL_Renderer *screen)
 			if (tick_immortal > last_tick_immortal + 5000)
 			{
 				MYHP--;
+				SCORE -= 10;
 				last_tick_immortal = tick_immortal;
 			}
 		}

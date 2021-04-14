@@ -29,11 +29,13 @@ public:
 	//load text
 	bool LoadFromRenderedText(std::string textureText, SDL_Color textColor, SDL_Renderer *screen);
 
-	bool LoadFont(const char* texture_font)
+	bool LoadFont(const char* texture_font, int size)
 	{
-		my_font = TTF_OpenFont(texture_font, 64);
+		if (my_font != NULL)my_font = NULL;
+		
+		my_font = TTF_OpenFont(texture_font, size);
 
-		return 1;
+		return my_font != NULL;
 	}
 
 	//render texture
