@@ -146,6 +146,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="chest.cpp" />
+    <ClCompile Include="Coins.cpp" />
     <ClCompile Include="CommonFunction.cpp" />
     <ClCompile Include="ControlGame.cpp" />
     <ClCompile Include="gate.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="chest.h" />
+    <ClInclude Include="Coins.h" />
     <ClInclude Include="CommonFunction.h" />
     <ClInclude Include="ControlGame.h" />
     <ClInclude Include="gate.h" />

@@ -1,22 +1,21 @@
 ﻿#include "CommonFunction.h"
 #include "Load.h"
+#include "sstream"
 
 int dem = 0;
 int current_weapon = -1;
 SDL_Event gEvent;
-bool key_v = 0 ;
-bool key_space = 0;
-bool key_esc = 0;
 int bonusHP[12];
 bool quit = 0;
+bool is_had_weapon[12];
+bool key[200];
 
 const enum
 {
 	run_menu = 1,
 	run_game_over = 2,
 	run_normal_prehistory = 3,
-	run_boss_prehistory = 4,
-	game_pause = 5
+	run_boss_prehistory = 4
 };
 
 void Run_Menu()
@@ -77,6 +76,7 @@ void Run_Game_Over()
 
 void Run_Normal_Prehistory()
 {
+
 	bool pause_status = gControlGameManage.GetStatus();
 
 	if (pause_status == 0)
@@ -106,14 +106,12 @@ void Run_Normal_Prehistory()
 			gChest[i].HandleEvent(gRenderer, status_mov);
 			if (gChest[i].Getdk() == 1)
 			{
-				if (i == 0)
+				if (i == 0 && is_had_weapon[tree] == 0)
 				{
-					if (Weapon.size() == 0)
-					{
-						Weapon.push_back(tree);
-						SDL_Rect chest_pos = gChest[i].GetRect();
-						gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
-					}
+					Weapon.push_back(tree);
+					SDL_Rect chest_pos = gChest[i].GetRect();
+					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
+					is_had_weapon[tree] = 1;
 				}
 				else if (i == 1 || i == 2 || i == 3)
 				{
@@ -125,21 +123,19 @@ void Run_Normal_Prehistory()
 					SDL_Rect chest_pos = gChest[i].GetRect();
 					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
 				}
-				else if (i == 4)
+				else if (i == 4 && is_had_weapon[spear] == 0)
 				{
-					if (Weapon.size() == 1)
-					{
-						Weapon.push_back(spear);
-						SDL_Rect chest_pos = gChest[i].GetRect();
-						gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
-					}
+					Weapon.push_back(spear);
+					SDL_Rect chest_pos = gChest[i].GetRect();
+					gWeaponInChest[i].SetRect(chest_pos.x, chest_pos.y);
+					is_had_weapon[spear] = 1;
 				}
 				gWeaponInChest[i].HandleEvent(gRenderer, status_mov);
 			}
 		}
 
 		//change weapon
-		if (key_v)
+		if (key[118])
 		{
 			if (Weapon.size() > 0)
 			{
@@ -216,8 +212,24 @@ void Run_Normal_Prehistory()
 		SDL_Rect hero_rect = gHero.GetRect();
 		gBullet.HandleEvent(gRenderer, hero_rect);
 
+		//render coins
+		gCoins.HandleEvent(gRenderer, 1);
+
 		//render guide
-		gControlGameManage.HandleEvent(gRenderer, key_space);
+		gControlGameManage.HandleEvent(gRenderer, key[32]);
+
+		//render score
+		std::stringstream timeText;
+
+		timeText.str("");
+
+		timeText << "Score   " << SCORE;
+        
+		SDL_Color textColor = { 200, 0, 0, 255 };
+
+		gScore.LoadFromRenderedText( timeText.str().c_str(), textColor,gRenderer);
+
+		gScore.HandleEvent(gRenderer);
 	}
 	else
 	{
@@ -229,7 +241,7 @@ void Run_Normal_Prehistory()
 		gBackground.Render(gRenderer, 0, 0);
 
 		//render guide
-		gControlGameManage.HandleEvent(gRenderer, key_space);
+		gControlGameManage.HandleEvent(gRenderer, key[32]);
     }
 
 	//Update screen
@@ -241,7 +253,7 @@ void Run_Normal_Prehistory()
 		dem = 0;
 	}
 
-	if (key_esc == 1 && pause_status == 1)
+	if (key[27] == 1 && pause_status == 1)
 	{
 		screen_status = run_menu;
 		dem = 0;
@@ -286,7 +298,7 @@ void Run_Boss_Prehistory()
 		int status2 = gHero.GetStatus2();
 
 		//change weapon
-		if (key_v)
+		if (key[118])
 		{
 			if (Weapon.size() > 0)
 			{
@@ -298,11 +310,8 @@ void Run_Boss_Prehistory()
 						{
 							current_weapon = Weapon[0];
 						}
-						else
-						{
-							current_weapon = Weapon[i + 1];
-							break;
-						}
+						else current_weapon = Weapon[i + 1];
+						break;
 					}
 				}
 				if (current_weapon == -1)
@@ -335,7 +344,7 @@ void Run_Boss_Prehistory()
 		gHP.HandleEvent(gRenderer, MYHP);
 
 		//render guide
-		gControlGameManage.HandleEvent(gRenderer, key_space);
+		gControlGameManage.HandleEvent(gRenderer, key[32]);
 	}
 	else
 	{
@@ -347,7 +356,7 @@ void Run_Boss_Prehistory()
 		gBackground.Render(gRenderer, 0, 0);
 
 		//render guide
-		gControlGameManage.HandleEvent(gRenderer, key_space);
+		gControlGameManage.HandleEvent(gRenderer, key[32]);
 	}
 
 	//Update screen
@@ -359,7 +368,7 @@ void Run_Boss_Prehistory()
 		dem = 0;
 	}
 
-	if (key_esc == 1 && pause_status == 1)
+	if (key[27] == 1 && pause_status == 1)
 	{
 		screen_status = run_menu;
 		dem = 0;
@@ -394,9 +403,13 @@ int main(int argc, char* argv[])
 			{
 				is_quit = true;
 			}
-			if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_v)key_v = 1;
-			if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_SPACE)key_space = 1;
-			if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_ESCAPE)key_esc = 1;
+			if (gEvent.type == SDL_KEYDOWN)
+			{
+				for (int i = 10; i <= 122; ++i)
+				{
+					if (gEvent.key.keysym.sym == i)key[i] = 1;
+				}
+			}
 		}
 
 		if (screen_status == run_menu)
@@ -409,6 +422,7 @@ int main(int argc, char* argv[])
 			else if(dem >= 10)
 			{
 				dem = 10;
+				SCORE = 0;
 				Run_Menu();
 			}
 		}
@@ -439,6 +453,7 @@ int main(int argc, char* argv[])
 				memset(detect, 0, sizeof(detect));
 				gGate.Start();
 				current_weapon = -1;
+				memset(is_had_weapon,0,sizeof(is_had_weapon));
 			}
 			else if (dem >= 10)
 			{
@@ -464,10 +479,11 @@ int main(int argc, char* argv[])
 				Run_Boss_Prehistory();
 			}
 		}
-
-		key_v = 0;
-		key_space = 0;
-		key_esc = 0;
+		
+		for (int i = 10; i <= 122; ++i)
+		{
+			key[i] = 0;
+		}
 
 		if (frameDelay > SDL_GetTicks() - frame_start)
 		{

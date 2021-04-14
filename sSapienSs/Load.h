@@ -20,6 +20,7 @@
 #include "gate.h"
 #include "Menu.h"
 #include "ControlGame.h"
+#include "Coins.h"
 
 enum
 {
@@ -47,6 +48,8 @@ Button gExitButton;
 PrehistoryBossManage gPrehistoryBossManage;
 MenuManage gMenuManage;
 ControlGameManage gControlGameManage;
+Coins gCoins;
+Score gScore;
 
 bool init()
 {
@@ -126,6 +129,8 @@ void free_texture()
 	gPrehistoryBossManage.~PrehistoryBossManage();
 	gMenuManage.~MenuManage();
 	gControlGameManage.~ControlGameManage();
+	gCoins.free();
+	gScore.free();
 }
 
 void close()
@@ -295,7 +300,13 @@ bool Load_NorMal_Prehistory_Map()
 	}
 
 	//load control game
-	success = min (success,gControlGameManage.Load(gRenderer));
+	success = min (success, gControlGameManage.Load(gRenderer));
+
+	//load coins
+	success = min (success, gCoins.LoadFromFile("coins/coins.png",gRenderer));
+
+	//load font
+	gScore.LoadFont("font/PEPSI.ttf");
 
 	//delete weapon
 	while (Weapon.size())

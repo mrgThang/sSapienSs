@@ -3,6 +3,7 @@
 BaseTexture::BaseTexture()
 {
 	my_texture = NULL;
+	my_font = NULL;
 }
 
 BaseTexture::~BaseTexture()
@@ -21,6 +22,11 @@ void BaseTexture::free()
 		my_rect.y = -640;
 		my_rect.w = 0;
 		my_rect.h = 0;
+	}
+	if (my_font != NULL)
+	{
+		TTF_CloseFont(my_font);
+		my_font = NULL;
 	}
 }
 
@@ -80,6 +86,49 @@ bool BaseTexture::LoadFromFile(std::string path, SDL_Renderer* screen)
 	my_texture = FinalTexture;
 	return my_texture != NULL;
 }
+
+bool BaseTexture::LoadFromRenderedText(std::string textureText, SDL_Color textColor, SDL_Renderer* screen)
+{
+	//Get rid of preexisting texture
+	if (my_texture != NULL)
+	{
+		SDL_DestroyTexture(my_texture);
+		my_texture = NULL;
+		my_rect.x = -640;
+		my_rect.y = -640;
+		my_rect.w = 0;
+		my_rect.h = 0;
+	}
+
+	//Render text surface
+	SDL_Surface* textSurface = TTF_RenderText_Solid(my_font, textureText.c_str(), textColor);
+	if (textSurface == NULL)
+	{
+		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+	}
+	else
+	{
+		//Create texture from surface pixels
+		my_texture = SDL_CreateTextureFromSurface(screen, textSurface);
+		if (my_texture == NULL)
+		{
+			printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+		}
+		else
+		{
+			//Get image dimensions
+			my_rect.w = textSurface->w;
+			my_rect.h = textSurface->h;
+		}
+
+		//Get rid of old surface
+		SDL_FreeSurface(textSurface);
+	}
+
+	//Return success
+	return my_texture != NULL;
+}
+
 
 void BaseTexture::Render(SDL_Renderer* screen, int x, int y, SDL_Rect* Clip, double angle, SDL_Point* Center, SDL_RendererFlip flip)
 {

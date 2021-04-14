@@ -78,4 +78,6 @@ extern Uint32 last_tick_immortal;
 
 extern std::vector<int> Weapon;
 
+extern int SCORE;
+
 #endif
