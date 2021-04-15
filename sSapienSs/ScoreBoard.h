@@ -87,4 +87,104 @@ private:
 	bool over;
 };
 
+class CurrentScore : public ScoreBoard
+{
+public:
+	CurrentScore();
+
+	~CurrentScore();
+
+	void HandleEvent(SDL_Renderer* screen);
+};
+
+class CurrentName : public ScoreBoard
+{
+public:
+	CurrentName();
+
+	~CurrentName();
+
+	void HandleEvent(SDL_Renderer* screen);
+};
+
+class ScoreBoardName : public ScoreBoard
+{
+public:
+	ScoreBoardName();
+
+	~ScoreBoardName();
+
+	void HandleEvent(SDL_Renderer* screen);
+};
+
+class Member:public ScoreBoard
+{
+public:
+	Member();
+
+	~Member();
+
+	void HandleEvent(SDL_Renderer* screen, int &move, int &line);
+
+	int ReturnStatus()
+	{
+		return status;
+	}
+
+private:
+	int status;
+
+	int dem = 0;
+};
+
+class ScoreBoardManage : public ScoreBoard
+{
+public:
+	ScoreBoardManage();
+
+	~ScoreBoardManage();
+
+	void HandleEvent(SDL_Renderer* screen);
+
+	bool Load(SDL_Renderer* screen);
+
+	bool ReturnPressESC()
+	{
+		return press_esc;
+	}
+
+private:
+	Member mMember[11];
+
+	ScoreBoardName mScoreBoardName[11];
+
+	CurrentScore mCurrentScore;
+
+	CurrentName mCurrentName;
+
+	int current_score;
+
+	std::string lastname;
+
+	int lastscore;
+
+	int data_dem;
+
+	std::vector<std::pair<int, std::string>> data;
+
+	int status;
+
+	int up_member;
+
+	int new_member_status;
+
+	int up_member_status[4];
+
+	int up_member_line[4];
+
+	int new_member_line;
+	
+	bool press_esc;
+};
+
 #endif

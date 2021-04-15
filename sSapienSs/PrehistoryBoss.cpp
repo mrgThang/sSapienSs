@@ -118,7 +118,7 @@ void Warning::HandleEvent(SDL_Renderer* screen, int &manage_status)
 		dem_status = 0;
 		dem++;
 	}
-	if (dem >= 5)
+	if (dem >= 7)
 	{
 		dem = 0;
 		manage_status = water1_motion;
@@ -519,6 +519,8 @@ bool PrehistoryBossManage::Load(SDL_Renderer* screen)
 	//load sand
 	success = min(success, mSand.LoadFromFile("BossPrehistory/sand.png", screen));
 
+	dem_score = 0;
+
 	return success;
 }
 
@@ -563,7 +565,8 @@ void PrehistoryBossManage::HandleEvent(SDL_Renderer* screen)
 	}
 	if (manage_status == boss_dead)
 	{
-
+		dem_score++;
+		if(dem_score == 1)SCORE += 100;
 	}
 	else if (manage_status == warning_start)
 	{

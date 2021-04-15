@@ -218,6 +218,8 @@ private:
 	int my_hp;
 
 	int is_attacked;
+
+	int dem_score;
 };
 
 #endif

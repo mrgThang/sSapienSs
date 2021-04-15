@@ -51,6 +51,8 @@ private:
 	int dem_immortal;
 
 	Uint32 tick;
+
+	int add = 0;
 };
 
 #endif

@@ -1,6 +1,5 @@
 ﻿#include "CommonFunction.h"
 #include "Load.h"
-#include "sstream"
 
 int dem = 0;
 int current_weapon = -1;
@@ -79,6 +78,26 @@ void Run_Typing_Name()
     
 }
 
+void Run_Score_Board()
+{
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
+
+	gBackground.Render(gRenderer, 0, 0);
+
+	gScoreBoardManage.HandleEvent(gRenderer);
+
+	if (gScoreBoardManage.ReturnPressESC() == 1)
+	{
+		screen_status = run_menu;
+		dem = 0;
+	}
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
+}
+
 void Run_Game_Over()
 {
 	//clear screen
@@ -95,7 +114,7 @@ void Run_Game_Over()
 
 	if (currentKeyStates[SDL_SCANCODE_SPACE])
 	{
-		screen_status = run_menu;
+		screen_status = run_score_board;
 		dem = 0;
 	}
 }
@@ -365,11 +384,12 @@ void Run_Boss_Prehistory()
 		int sword_status2 = gSword.GetSwordStatus2();
 		int spear_status2 = gSpear.GetSpearStatus2();
 
+		gPrehistoryBossManage.HandleEvent(gRenderer);
+
 		if (gPrehistoryBossManage.GetHP() > 0)
 		{
 			gPrehistoryBossManage.SetWeaponStatus(spear, spear_status, spear_status2);
 			gPrehistoryBossManage.SetWeaponStatus(tree, sword_status, sword_status2);
-			gPrehistoryBossManage.HandleEvent(gRenderer);
 		}
 		else gGate.HandleEvent(gRenderer, status_mov, &gEvent);
 
@@ -378,6 +398,23 @@ void Run_Boss_Prehistory()
 
 		//render guide
 		gControlGameManage.HandleEvent(gRenderer, key[32]);
+
+		//render score
+		std::stringstream timeText;
+
+		timeText.str("");
+
+		timeText << NAME << "  Score: " << SCORE;
+
+		SDL_Color textColor = { 200, 200, 0, 255 };
+
+		if (last_score_text != timeText.str().c_str())
+		{
+			gScore.LoadFromRenderedText(timeText.str().c_str(), textColor, gRenderer);
+			last_score_text = timeText.str().c_str();
+		}
+
+		gScore.HandleEvent(gRenderer);
 	}
 	else
 	{
@@ -397,7 +434,7 @@ void Run_Boss_Prehistory()
 
 	if (gGate.ChangeMap() == 1)
 	{
-		screen_status = run_menu;
+		screen_status = run_score_board;
 		dem = 0;
 	}
 
@@ -474,12 +511,27 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		if (screen_status == run_score_board)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Score_Board())is_quit = true;
+			}
+			else if (dem >= 5)
+			{
+				dem = 5;
+				Run_Score_Board();
+			}
+		}
+
 		if (screen_status == run_game_over)
 		{
 			dem++;
 			if (dem == 1)
 			{
 				if (!Load_Game_Over())is_quit = true;
+				
 			}
 			else if (dem >= 5)
 			{

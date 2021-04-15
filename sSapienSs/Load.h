@@ -52,6 +52,7 @@ ControlGameManage gControlGameManage;
 Coins gCoins;
 Score gScore;
 TypingManage gTypingManage;
+ScoreBoardManage gScoreBoardManage;
 
 bool init()
 {
@@ -134,6 +135,7 @@ void free_texture()
 	gCoins.free();
 	gScore.free();
 	gTypingManage.~TypingManage();
+	gScoreBoardManage.~ScoreBoardManage();
 }
 
 void close()
@@ -351,6 +353,17 @@ bool Load_Menu()
 
 	//load manage animation menu
 	success = min(success, gMenuManage.Load(gRenderer));
+
+	return success;
+}
+
+bool Load_Score_Board()
+{
+	int success = 1;
+
+	success = min(success, gBackground.LoadFromFile("background/ranking.png", gRenderer));
+
+	success = min(success, gScoreBoardManage.Load(gRenderer));
 
 	return success;
 }

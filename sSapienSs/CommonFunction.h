@@ -4,12 +4,15 @@
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <string>
 #include <SDL_mixer.h>
 #include <vector>
+#include "sstream"
+
 
 //global variables
 static SDL_Window* gWindow = NULL;
@@ -33,7 +36,7 @@ const int FOOT_DISTANT = 8;
 const int ATK_DISTANT = 320;
 
 //map variables
-#define TILE_SIZE  64
+#define TILE_SIZE 64
 #define HERO_SIZE_X 64
 #define HERO_SIZE_Y 64
 
