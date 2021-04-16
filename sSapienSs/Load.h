@@ -53,6 +53,8 @@ Coins gCoins;
 Score gScore;
 TypingManage gTypingManage;
 ScoreBoardManage gScoreBoardManage;
+Mix_Music* gMusic = NULL;
+Mix_Chunk* gButtonSound = NULL;
 
 bool init()
 {
@@ -104,6 +106,13 @@ bool init()
 				printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 				success = false;
 			}
+
+			//Initialize SDL_mixer
+			if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+			{
+				printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+				success = false;
+			}
 		}
 	}
 	return success;
@@ -112,6 +121,7 @@ bool init()
 void free_texture()
 {
 	//Destroy texture
+	gHero.freeMusic();
     gHero.free();
 	gBullet.free();
 	gSword.free();
@@ -136,6 +146,11 @@ void free_texture()
 	gScore.free();
 	gTypingManage.~TypingManage();
 	gScoreBoardManage.~ScoreBoardManage();
+	//Free the music
+	Mix_FreeMusic(gMusic);
+	gMusic = NULL;
+	Mix_FreeChunk(gButtonSound);
+	gButtonSound = NULL;
 }
 
 void close()
@@ -151,6 +166,7 @@ void close()
 	IMG_Quit();
 	SDL_Quit();
 	TTF_Quit();
+	Mix_Quit();
 }
 
 bool Load_Typing_Name()
@@ -167,6 +183,9 @@ bool Load_Typing_Name()
 bool Load_NorMal_Prehistory_Map()
 {
 	bool success = 1;
+
+	//load music
+	gMusic = Mix_LoadMUS("Music/NormalPrehistory.wav");
     
     //load background
     success = min(success,gBackground.LoadFromFile("background/PrehistoryBackground.png", gRenderer));
@@ -178,6 +197,7 @@ bool Load_NorMal_Prehistory_Map()
 
 	//load hero
     success = min(success,gHero.LoadFromFile("hero/hero.png", gRenderer));
+	gHero.LoadMusic();
 	gHero.SetRect(0, 0);
 
     //load bullet
@@ -339,6 +359,10 @@ bool Load_Menu()
 {
 	bool success = 1;
 
+	//load music
+	gMusic = Mix_LoadMUS("Music/Menu.wav");
+	gButtonSound = Mix_LoadWAV("Music/Button.wav");
+
 	//load background
 	success = min(success, gBackground.LoadFromFile("background/MenuBackground.png",gRenderer));
 
@@ -389,6 +413,7 @@ bool Load_Boss_Prehistory_Map()
 
 	//load hero
 	success = min(success, gHero.LoadFromFile("hero/hero.png",gRenderer));
+	gHero.LoadMusic();
 	gHero.SetRect(0, 64*8);
 
 	//load spear

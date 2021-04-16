@@ -85,6 +85,8 @@ private:
 	StartButton mStartButton;
 
 	bool over;
+
+	Mix_Chunk* mButtonSound;
 };
 
 class CurrentScore : public ScoreBoard

@@ -131,6 +131,9 @@ TypingManage::~TypingManage()
 	mName.free();
 
 	mVerticalBar.free();
+
+	Mix_FreeChunk(mButtonSound);
+	mButtonSound = NULL;
 }
 
 bool TypingManage::Load(SDL_Renderer* screen)
@@ -149,6 +152,8 @@ bool TypingManage::Load(SDL_Renderer* screen)
 
 	success = min(success, mStartButton.LoadFromFile("coins/StartButton.png", screen));
 	mStartButton.SetRect(64 * 5, 64 * 7);
+
+	mButtonSound = Mix_LoadWAV("Music/Button.wav");
 
 	return success;
 }
@@ -170,7 +175,9 @@ void TypingManage::HandleEvent(SDL_Renderer* screen, bool key[200],SDL_Event *e)
 
 	mStartButton.HandleEvent(screen,e);
 
-	over = mStartButton.ReturnPress();	
+	over = mStartButton.ReturnPress();
+
+	if (over == 1)Mix_PlayChannel(-1, mButtonSound, 0);
 }
 
 //current score manage

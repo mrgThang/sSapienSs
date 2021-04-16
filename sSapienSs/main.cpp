@@ -45,12 +45,19 @@ void Run_Menu()
 
 	if (gStartButton.ReturnPressState() == 1)
 	{
+		Mix_PlayChannel(-1, gButtonSound, 0);
 		screen_status = run_typing_name;
 		dem = 0;
 	}
 
+	if (gOptionButton.ReturnPressState() == 1)
+	{
+		Mix_PlayChannel(-1, gButtonSound, 0);
+	}
+
 	if (gExitButton.ReturnPressState() == 1)
 	{
+		Mix_PlayChannel(-1, gButtonSound, 0);
 		quit = 1;
 	}
 }
@@ -488,6 +495,7 @@ int main(int argc, char* argv[])
 			if (dem  == 1)
 			{
 				if (!Load_Menu()) is_quit = true;
+				Mix_PlayMusic(gMusic, -1);
 			}
 			else if(dem >= 5)
 			{
@@ -553,6 +561,7 @@ int main(int argc, char* argv[])
 				gGate.Start();
 				current_weapon = -1;
 				memset(is_had_weapon,0,sizeof(is_had_weapon));
+				Mix_PlayMusic(gMusic, -1);
 			}
 			else if (dem >= 5)
 			{

@@ -11,6 +11,20 @@ public:
 
 	~Hero();
 
+	void LoadMusic()
+	{
+		gJumpSound = Mix_LoadWAV("Music/jumping.wav");
+		gWalkSound = Mix_LoadWAV("Music/Running.wav");
+	}
+
+	void freeMusic()
+	{
+		Mix_FreeChunk(gJumpSound);
+		gJumpSound = NULL;
+		Mix_FreeChunk(gWalkSound);
+		gWalkSound = NULL;
+	}
+
 	void HandleEvent(int &hero_jump_condition, int & hero_jump_max, const int max_screen_move);
 
 	void MoveLeft(const Uint8* currentKeyStates);
@@ -53,6 +67,10 @@ private:
 	Uint32 tick;
 
 	int add = 0;
+
+	Mix_Chunk* gJumpSound;
+
+	Mix_Chunk* gWalkSound;
 };
 
 #endif

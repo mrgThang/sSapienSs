@@ -91,6 +91,11 @@ void Hero::MoveRight(const Uint8* currentKeyStates, const int max_map_move)
         if(dem >= 8)status++,dem = 0;
         if (status < 2 || status > 3)status = 2;
         dk = 1;
+
+        if (CheckCollision(my_rect, "down") == 0)
+        {
+            Mix_PlayChannel(-1, gWalkSound, 0);
+        }
     }
 }
 
@@ -100,6 +105,7 @@ void Hero::MoveUp(const Uint8* currentKeyStates, int& hero_jump_condition, int& 
     {
         if (hero_jump_condition == 0)
         {
+            Mix_PlayChannel(-1, gJumpSound, 0);
             hero_jump_condition = 1;
             hero_jump_max = max(0, my_rect.y - 24 * FOOT_DISTANT);
         }
