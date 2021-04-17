@@ -45,6 +45,11 @@ void Chest::HandleEvent(SDL_Renderer* screen, int status_mov)
 		}
 	}
 
+	if (status == 1 && dem == 1)
+	{
+		Mix_PlayChannel(-1, mSound, 0);
+	}
+
 	Motion(screen);
 }
 

@@ -65,6 +65,7 @@ void Coins::Motion(SDL_Renderer* screen, int x, int y)
 		{
 			SCORE += 1;
 			dk[y][x] = 1;
+			Mix_PlayChannel(-1, mSound, 0);
 		}
 	}
 }

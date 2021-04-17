@@ -38,6 +38,18 @@ public:
 		return status;
 	}
 
+	void LoadSound()
+	{
+		mAttack = Mix_LoadWAV("Music/KangaruPunch.wav");
+	}
+
+	void freeSound()
+	{
+
+		Mix_FreeChunk(mAttack);
+		mAttack = NULL;
+	}
+
 private:
 	SDL_Rect my_rect;
 
@@ -58,6 +70,9 @@ private:
 	Uint32 tick2;
 
 	SDL_Texture* my_HP;
+
+	Mix_Chunk* mAttack = NULL;
+
 };
 
 #endif

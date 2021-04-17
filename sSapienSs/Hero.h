@@ -14,15 +14,17 @@ public:
 	void LoadMusic()
 	{
 		gJumpSound = Mix_LoadWAV("Music/jumping.wav");
-		gWalkSound = Mix_LoadWAV("Music/Running.wav");
+
+		gHurtSound = Mix_LoadWAV("Music/hurt.wav");
 	}
 
 	void freeMusic()
 	{
 		Mix_FreeChunk(gJumpSound);
 		gJumpSound = NULL;
-		Mix_FreeChunk(gWalkSound);
-		gWalkSound = NULL;
+
+		Mix_FreeChunk(gHurtSound);
+		gHurtSound = NULL;
 	}
 
 	void HandleEvent(int &hero_jump_condition, int & hero_jump_max, const int max_screen_move);
@@ -70,7 +72,8 @@ private:
 
 	Mix_Chunk* gJumpSound;
 
-	Mix_Chunk* gWalkSound;
+	Mix_Chunk* gHurtSound;
+
 };
 
 #endif

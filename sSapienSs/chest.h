@@ -26,10 +26,23 @@ public:
 		return dk;
 	}
 
+	void LoadSound()
+	{
+		mSound = Mix_LoadWAV("Music/Chest.wav");
+	}
+
+	void freeSound()
+	{
+		Mix_FreeChunk(mSound);
+		mSound = NULL;
+	}
+
 private:
 	int status;
 	bool dk = 0;
 	int dem = 0;
+
+	Mix_Chunk* mSound;
 };
 
 class WeaponInChest : public BaseTexture

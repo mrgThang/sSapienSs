@@ -33,6 +33,17 @@ public:
 		speed = x;
 	}
 
+	void LoadSound()
+	{
+		mSound = Mix_LoadWAV("Music/Spider.wav");
+	}
+
+	void freeSound()
+	{
+		Mix_FreeChunk(mSound);
+		mSound = NULL;
+	}
+
 private:
 	SDL_Rect my_rect;
 
@@ -51,6 +62,10 @@ private:
 	SDL_Rect my_tooth_rect;
 
 	int my_tooth_status;
+
+	Mix_Chunk* mSound;
+
+	int dem_sound;
 
 };
 

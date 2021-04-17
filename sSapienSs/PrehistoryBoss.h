@@ -39,6 +39,17 @@ public:
 
 	void Motion(SDL_Renderer* screen);
 
+	void LoadSound()
+	{
+		mSound = Mix_LoadWAV("");
+	}
+
+	void freeSound()
+	{
+		Mix_FreeChunk(mSound);
+		mSound = NULL;
+	}
+
 private:
 
 	int so_luot;
@@ -46,6 +57,8 @@ private:
 	int dem;
 
 	int status;
+
+	Mix_Chunk* mSound;
 };
 
 // biển báo warning
@@ -143,6 +156,34 @@ public:
 
 	void GoLeft(int *boss_action_status);
 
+	void LoadSound()
+	{
+		mScreamSound = Mix_LoadWAV("Music/BossScream.wav");
+		mAngrySound = Mix_LoadWAV("");
+		mMoveSound = Mix_LoadWAV("");;
+		mAttackSound = Mix_LoadWAV("");
+		mDizzySound = Mix_LoadWAV("");
+	}
+
+	void freeSound()
+	{
+
+		Mix_FreeChunk(mScreamSound);
+		mScreamSound = NULL;
+
+		Mix_FreeChunk(mAngrySound);
+		mAngrySound = NULL;
+
+		Mix_FreeChunk(mMoveSound);
+		mMoveSound = NULL;
+
+		Mix_FreeChunk(mAttackSound);
+		mAttackSound = NULL;
+
+		Mix_FreeChunk(mDizzySound);
+		mDizzySound = NULL;
+	}
+
 private:
 
     int status;
@@ -152,6 +193,17 @@ private:
 	int dem = 0;
 
 	int so_luot = 0;
+
+	Mix_Chunk* mScreamSound = NULL;
+
+	Mix_Chunk* mAngrySound = NULL;
+
+	Mix_Chunk* mMoveSound = NULL;
+
+	Mix_Chunk* mAttackSound = NULL;
+
+	Mix_Chunk* mDizzySound = NULL;
+
 };
 
 //class dieu kien

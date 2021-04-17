@@ -539,7 +539,7 @@ int main(int argc, char* argv[])
 			if (dem == 1)
 			{
 				if (!Load_Game_Over())is_quit = true;
-				
+				Mix_PlayMusic(gMusic, -1);
 			}
 			else if (dem >= 5)
 			{
@@ -580,6 +580,7 @@ int main(int argc, char* argv[])
 				gHero.TakeHP(MYHP,0);
 				memset(detect, 0, sizeof(detect));
 				gGate.Start();
+				Mix_PlayMusic(gMusic, -1);
 			}
 			else if (dem >= 5)
 			{

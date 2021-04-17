@@ -124,7 +124,9 @@ void free_texture()
 	gHero.freeMusic();
     gHero.free();
 	gBullet.free();
+	gSword.freeSound();
 	gSword.free();
+	gSpear.freeSound();
 	gSpear.free();
 	gGate.free();
 	gHP.free();
@@ -133,15 +135,32 @@ void free_texture()
     gExitButton.free();
     gOptionButton.free();
 	gGamemap.~GameMap();
-	for (int i = 0; i < gChest.size(); ++i)gChest[i].free();
+	for (int i = 0; i < gChest.size(); ++i)
+	{
+		gChest[i].freeSound();
+		gChest[i].free();
+	}
 	for (int i = 0; i < gWeaponInChest.size(); ++i)gWeaponInChest[i].free();
-	for (int i = 0; i < gSpider.size(); ++i)gSpider[i].free();
+	for (int i = 0; i < gSpider.size(); ++i)
+	{
+		gSpider[i].freeSound();
+		gSpider[i].free();
+	}
 	for (int i = 0; i < gWaterFall.size(); ++i)gWaterFall[i].free();
-	for (int i = 0; i < gRhino.size(); ++i)gRhino[i].free();
-	for (int i = 0; i < gKangaru.size(); ++i)gKangaru[i].free();
+	for (int i = 0; i < gRhino.size(); ++i)
+	{
+		gRhino[i].freeSound();
+		gRhino[i].free();
+	}
+	for (int i = 0; i < gKangaru.size(); ++i)
+	{
+		gKangaru[i].freeSound();
+		gKangaru[i].free();
+	}
 	gPrehistoryBossManage.~PrehistoryBossManage();
 	gMenuManage.~MenuManage();
 	gControlGameManage.~ControlGameManage();
+	gCoins.FreeSound();
 	gCoins.free();
 	gScore.free();
 	gTypingManage.~TypingManage();
@@ -202,9 +221,11 @@ bool Load_NorMal_Prehistory_Map()
 
     //load bullet
     success = min(success, gBullet.LoadFromFile("bullet/bullet.jpg", gRenderer));
+	gSpear.LoadSound();
 
     //load tree sword
     success = min(success, gSword.LoadFromFile("sword/sword3.png", gRenderer));
+	gSword.LoadSound();
     
     //load HP
     success = min(success,gHP.LoadFromFile("heartpoint/myHP.png", gRenderer)); 
@@ -240,6 +261,7 @@ bool Load_NorMal_Prehistory_Map()
 	{
 		success = min(success, gChest[i].LoadFromFile("chest/chest.png", gRenderer));
 		gChest[i].GetPosition(chest_pos_x[i] * TILE_SIZE, chest_pos_y[i] * TILE_SIZE);
+		gChest[i].LoadSound();
 	}
 	for (int i = 0; i < gWeaponInChest.size(); ++i)
 	{
@@ -291,6 +313,7 @@ bool Load_NorMal_Prehistory_Map()
 		success = min(success, gSpider[i].LoadToothFromFile("enemies/spidertooth.png", gRenderer));
 		gSpider[i].SetPosition(spider_pos_x[i] * TILE_SIZE, spider_pos_y[i] * TILE_SIZE);
 		gSpider[i].SetSpeed(spider_speed[i]);
+		gSpider[i].LoadSound();
 	}
 
 	//load Rhino
@@ -311,6 +334,7 @@ bool Load_NorMal_Prehistory_Map()
 	{
 		success = min(success, gRhino[i].LoadFromFile("enemies/rhino.png", gRenderer));
 		success = min(success, gRhino[i].LoadHPFromFile("heartpoint/HeartPointEnemies.png", gRenderer));
+		gRhino[i].LoadSound();
 		gRhino[i].SetPosition(rhino_pos_x[i] * TILE_SIZE, rhino_pos_y[i] * TILE_SIZE);
 	}
 
@@ -332,6 +356,7 @@ bool Load_NorMal_Prehistory_Map()
 	{
 		success = min(success, gKangaru[i].LoadFromFile("enemies/kangaru.png", gRenderer));
 		success = min(success, gKangaru[i].LoadHPFromFile("heartpoint/HeartPointEnemies.png", gRenderer));
+		gKangaru[i].LoadSound();
 		gKangaru[i].SetPosition(kangaru_pos_x[i] * TILE_SIZE, kangaru_pos_y[i] * TILE_SIZE);
 	}
 
@@ -341,6 +366,7 @@ bool Load_NorMal_Prehistory_Map()
 	//load coins
 	success = min (success, gCoins.LoadFromFile("coins/coins.png",gRenderer));
 	gCoins.Reset();
+	gCoins.LoadSound();
 
 	//load font
 	gScore.LoadFont("font/Kingthings.ttf", 32);
@@ -396,6 +422,9 @@ bool Load_Game_Over()
 {
 	bool success = 1;
 
+	//load music
+	gMusic = Mix_LoadMUS("Music/GameOver.wav");
+
 	//load gameover background
 	success = min(success, gBackground.LoadFromFile("background/GameOver.png", gRenderer));
 
@@ -405,6 +434,9 @@ bool Load_Game_Over()
 bool Load_Boss_Prehistory_Map()
 {
 	bool success = 1;
+
+	//load Music
+	gMusic = Mix_LoadMUS("Music/BossPrehistory.wav");
 
 	//load boss action
 	success = min(success, gPrehistoryBossManage.Load(gRenderer));
@@ -418,9 +450,11 @@ bool Load_Boss_Prehistory_Map()
 
 	//load spear
 	success = min(success, gSpear.LoadFromFile("sword/spear.png",gRenderer));
+	gSpear.LoadSound();
 
 	//load tree
 	success = min(success, gSword.LoadFromFile("sword/sword3.png", gRenderer));
+	gSword.LoadSound();
 
 	//load hp
 	success = min(success, gHP.LoadFromFile("heartpoint/myHP.png",gRenderer));

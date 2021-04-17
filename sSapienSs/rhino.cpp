@@ -155,6 +155,7 @@ void Rhino::MoveLeft()
             }
             if (status < 2 || status > 5)status = 2;
             dk = 1;
+
         }
     }
 }
@@ -167,7 +168,7 @@ void Rhino::MoveRight()
     {
         if (x > 0)
         {
-            my_rect.x += FOOT_DISTANT/2;
+            my_rect.x += FOOT_DISTANT / 2;
             dem++;
             if (dem >= 12)
             {
@@ -176,6 +177,7 @@ void Rhino::MoveRight()
             }
             if (status < 4 || status > 7)status = 4;
             dk = 1;
+
         }
     }
 }
@@ -205,7 +207,9 @@ void Rhino::Attack()
                 MYHP--;
                 SCORE -= 10;
                 last_tick_immortal = tick_immortal;
+                Mix_PlayChannel(-1, mAttackSound, 0);
             }
+            if(dem == 0)Mix_PlayChannel(-1, mAttackSound, 0);
         }
     }
 
@@ -232,6 +236,7 @@ void Rhino::Attack()
                 SCORE -= 10;
                 last_tick_immortal = tick_immortal;
             }
+            if(dem == 0)Mix_PlayChannel(-1, mAttackSound, 0);
         }
     }
 }

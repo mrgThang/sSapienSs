@@ -21,6 +21,7 @@ void Spider::SetPosition(int x, int y)
 {
     my_rect.x = x;
     my_rect.y = y;
+    dem_sound = 0;
 }
 
 void Spider::HandldeEvent(SDL_Renderer* screen, int status_mov)
@@ -32,6 +33,16 @@ void Spider::HandldeEvent(SDL_Renderer* screen, int status_mov)
     if (status_mov == 2)
     {
         my_rect.x -= FOOT_DISTANT;
+    }
+
+    //sound
+    if (hero_start_x >= my_rect.x - 64 * 10 && hero_start_x <= my_rect.x + 64 * 10)
+    {
+        dem_sound++;
+        if (dem_sound == 1)
+        {
+            Mix_PlayChannel(-1, mSound, 0);
+        }
     }
 
     //stay motion

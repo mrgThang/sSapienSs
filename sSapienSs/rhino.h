@@ -38,6 +38,18 @@ public:
 		return status;
 	}
 
+	void LoadSound()
+	{
+		mAttackSound = Mix_LoadWAV("Music/KangaruPunch.wav");
+		if (mAttackSound == NULL)std::cout << 1;
+	}
+
+	void freeSound()
+	{
+		Mix_FreeChunk(mAttackSound);
+		mAttackSound = NULL;
+	}
+
 private:
 	SDL_Rect my_rect;
 
@@ -58,6 +70,8 @@ private:
 	Uint32 tick2;
 
 	SDL_Texture* my_HP;
+
+	Mix_Chunk* mAttackSound = NULL;
 };
 
 #endif

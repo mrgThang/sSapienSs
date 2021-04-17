@@ -467,6 +467,7 @@ PrehistoryBossManage::PrehistoryBossManage()
 
 PrehistoryBossManage::~PrehistoryBossManage()
 {
+	mBoss.freeSound();
 	mBoss.free();
 	mSand.free();
 	mBigWarning.free();
@@ -495,6 +496,8 @@ bool PrehistoryBossManage::Load(SDL_Renderer* screen)
 	//load boss
 	success = min(success, mBoss.LoadFromFile("BossPrehistory/mammouth.png", screen));
 	mBoss.SetRect(64 * 20, 64 * 4);
+	//load Boss Sound
+	//mBoss.LoadSound();
 
 	//load water1
 	for (int i = 0; i < 10; ++i)

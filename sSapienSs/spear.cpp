@@ -23,6 +23,7 @@ void Spear::HandleEvent(SDL_Renderer* screen, int st2)
 		dk = 1;
 		if (status2 == 1)status = 1;
 		else status = 5;
+		Mix_PlayChannel(-1, mSound, 0);
 	}
 	if (dk == 1)
 	{

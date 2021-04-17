@@ -230,7 +230,9 @@ void Kangaru::Attack()
                 MYHP--;
                 SCORE -= 10;
                 last_tick_immortal = tick_immortal;
+                
             }
+            if(dem == 0)Mix_PlayChannel(-1, mAttack, 0);
         }
     }
 
@@ -250,12 +252,17 @@ void Kangaru::Attack()
 
         dk = 1;
 
-        tick_immortal = SDL_GetTicks();
-        if (tick_immortal > last_tick_immortal + 5000)
+        if (status == 1)
         {
-            MYHP--;
-            SCORE -= 10;
-            last_tick_immortal = tick_immortal;
+            tick_immortal = SDL_GetTicks();
+            if (tick_immortal > last_tick_immortal + 5000)
+            {
+                MYHP--;
+                SCORE -= 10;
+                last_tick_immortal = tick_immortal;
+
+            }
+            if(dem == 0)Mix_PlayChannel(-1, mAttack, 0);
         }
     }
 }

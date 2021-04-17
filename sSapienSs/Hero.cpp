@@ -91,11 +91,6 @@ void Hero::MoveRight(const Uint8* currentKeyStates, const int max_map_move)
         if(dem >= 8)status++,dem = 0;
         if (status < 2 || status > 3)status = 2;
         dk = 1;
-
-        if (CheckCollision(my_rect, "down") == 0)
-        {
-            Mix_PlayChannel(-1, gWalkSound, 0);
-        }
     }
 }
 
@@ -203,6 +198,10 @@ void Hero::Motion(SDL_Renderer* screen)
             dem_immortal = 0;
             immortal_status = 0;
             tick = 0;
+        }
+        else if (SDL_GetTicks() == tick)
+        {
+            Mix_PlayChannel(-1, gHurtSound, 0);
         }
     }
     else Render(screen, my_rect.x, my_rect.y, clipz);

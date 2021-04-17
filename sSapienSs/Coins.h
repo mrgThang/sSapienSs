@@ -18,11 +18,24 @@ public:
 
 	void Reset();
 
+	void FreeSound()
+	{
+		Mix_FreeChunk(mSound);
+		mSound = NULL;
+	}
+
+	void LoadSound()
+	{
+		mSound = Mix_LoadWAV("Music/Coins.wav");
+	}
+
 private:
 
 	int status;
 
 	int dem = 0;
+
+	Mix_Chunk* mSound;
 };
 
 class Score : public BaseTexture
