@@ -41,13 +41,18 @@ public:
 
 	void LoadSound()
 	{
-		mSound = Mix_LoadWAV("");
+		mSound = Mix_LoadWAV("Music/BigWarning.wav");
+
+		mScream = Mix_LoadWAV("Music/BossScream.wav");
 	}
 
 	void freeSound()
 	{
 		Mix_FreeChunk(mSound);
 		mSound = NULL;
+
+		Mix_FreeChunk(mScream);
+		mScream = NULL;
 	}
 
 private:
@@ -59,6 +64,8 @@ private:
 	int status;
 
 	Mix_Chunk* mSound;
+
+	Mix_Chunk* mScream;
 };
 
 // biển báo warning
@@ -74,6 +81,19 @@ public:
 
 	void Motion(SDL_Renderer * screen);
 
+	void loadSound()
+	{
+		mSound = Mix_LoadWAV("Music/Warning.wav");
+	}
+
+	void freeSound()
+	{
+		Mix_FreeChunk(mSound);
+		mSound = NULL;
+	}
+
+	void reset();
+
 private:
 
 	int status;
@@ -81,6 +101,8 @@ private:
 	int dem_status;
 
 	int dem = 0;
+
+	Mix_Chunk* mSound;
 };
 
 // kiểu đánh water1
@@ -96,6 +118,8 @@ public:
 
 	void Motion(SDL_Renderer * screen);
 
+	void reset();
+
 private:
 
 	int dem;
@@ -103,6 +127,7 @@ private:
 	int dem_status;
 
 	int status;
+
 };
 
 // kiểu đánh water2
@@ -117,6 +142,8 @@ public:
 	void HandleEvent(SDL_Renderer* screen, int & manage_status);
 
 	void Motion(SDL_Renderer* screen);
+
+	void reset();
 
 private:
 
@@ -135,6 +162,8 @@ public:
 	void HandleEvent(SDL_Renderer* screen, int &manage_status, int &so_luot_manage);
 
 	void Motion(SDL_Renderer* screen);
+
+	void reset();
 
 private:
 
@@ -158,27 +187,15 @@ public:
 
 	void LoadSound()
 	{
-		mScreamSound = Mix_LoadWAV("Music/BossScream.wav");
-		mAngrySound = Mix_LoadWAV("");
-		mMoveSound = Mix_LoadWAV("");;
-		mAttackSound = Mix_LoadWAV("");
-		mDizzySound = Mix_LoadWAV("");
+		mAngrySound = Mix_LoadWAV("Music/BossAngry.wav");
+		mDizzySound = Mix_LoadWAV("Music/BossDizzy.wav");
 	}
 
 	void freeSound()
 	{
 
-		Mix_FreeChunk(mScreamSound);
-		mScreamSound = NULL;
-
 		Mix_FreeChunk(mAngrySound);
 		mAngrySound = NULL;
-
-		Mix_FreeChunk(mMoveSound);
-		mMoveSound = NULL;
-
-		Mix_FreeChunk(mAttackSound);
-		mAttackSound = NULL;
 
 		Mix_FreeChunk(mDizzySound);
 		mDizzySound = NULL;
@@ -194,13 +211,7 @@ private:
 
 	int so_luot = 0;
 
-	Mix_Chunk* mScreamSound = NULL;
-
 	Mix_Chunk* mAngrySound = NULL;
-
-	Mix_Chunk* mMoveSound = NULL;
-
-	Mix_Chunk* mAttackSound = NULL;
 
 	Mix_Chunk* mDizzySound = NULL;
 
@@ -272,6 +283,12 @@ private:
 	int is_attacked;
 
 	int dem_score;
+
+	int water2sound_dem;
+
+	Mix_Chunk* mWater1Sound;
+
+	Mix_Chunk* mWater2Sound;
 };
 
 #endif

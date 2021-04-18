@@ -17,8 +17,20 @@ const enum
 	run_game_over = 3,
 	run_score_board = 4,
 	run_normal_prehistory = 5,
-	run_boss_prehistory = 6
+	run_boss_prehistory = 6,
+	openword = 7,
+	closeword = 8
 };
+
+void Run_Open_Word()
+{
+
+}
+
+void Run_Close_Word()
+{
+
+}
 
 void Run_Menu()
 {

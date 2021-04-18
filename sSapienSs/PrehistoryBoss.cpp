@@ -82,6 +82,14 @@ void BigWarning::HandleEvent(SDL_Renderer* screen, int &manage_status)
 		dem = 0;
 		manage_status = boss_start;
 	}
+	else if (so_luot == 0 && dem == 1)
+	{
+		Mix_PlayChannel(-1, mSound, 0);
+	}
+	else if (so_luot == 3 && dem == 1)
+	{
+		Mix_PlayChannel(1, mScream, 0);
+	}
 }
 
 void BigWarning::Motion(SDL_Renderer* screen)
@@ -124,6 +132,10 @@ void Warning::HandleEvent(SDL_Renderer* screen, int &manage_status)
 		manage_status = water1_motion;
 		status = 0;
 	}
+	if (dem == 0 && dem_status == 1)
+	{
+		Mix_PlayChannel(-1, mSound, 0);
+	}
 	Motion(screen);
 }
 
@@ -135,6 +147,13 @@ void Warning::Motion(SDL_Renderer* screen)
 	clip->w = 64;
 	clip->h = 64;
 	Render(screen, my_rect.x, my_rect.y, clip);
+}
+
+void Warning::reset()
+{
+	status = 0;
+	dem = 0;
+	dem_status = 0;
 }
 
 //boss action
@@ -218,6 +237,10 @@ void Boss::HandleEvent(SDL_Renderer* screen, int& manage_status, int & last_atta
 	}
 	else if(manage_status == boss_angry)
 	{
+		if (so_luot == 2 && dem == 0)
+		{
+			Mix_PlayChannel(3,mAngrySound, 0);
+		}
 		if (so_luot < 12)
 		{
 			status2 = 3;
@@ -277,6 +300,10 @@ void Boss::HandleEvent(SDL_Renderer* screen, int& manage_status, int & last_atta
 	}
 	else if (manage_status == boss_dizzy)
 	{
+		if (so_luot == 2 && dem == 0)
+		{
+			Mix_PlayChannel(2, mDizzySound, 0);
+		}
 		if (so_luot < 15)
 		{
 			status2 = 4;
@@ -364,6 +391,13 @@ void Water1::Motion(SDL_Renderer* screen)
 	}
 
 	Render(screen, my_rect.x, my_rect.y, clip);
+}
+
+void Water1 :: reset()
+{
+	status = 1;
+	dem_status = 0;
+	dem = 0;
 }
 
 //water2 action
@@ -470,17 +504,25 @@ PrehistoryBossManage::~PrehistoryBossManage()
 	mBoss.freeSound();
 	mBoss.free();
 	mSand.free();
+	mBigWarning.freeSound();
 	mBigWarning.free();
 	mHP.free();
 	for (int i = 0; i < 10; ++i)
 	{
+		mWarning[i].freeSound();
 		mWarning[i].free();
 		mWater1[i].free();
 	}
 	for (int i = 0; i < 20; ++i)
 	{
 		mWater2[i].free();
-	} 
+	}
+
+	//free music
+	Mix_FreeChunk(mWater1Sound);
+	mWater1Sound = NULL;
+	Mix_FreeChunk(mWater2Sound);
+	mWater2Sound = NULL;
 }
 
 bool PrehistoryBossManage::Load(SDL_Renderer* screen)
@@ -492,17 +534,19 @@ bool PrehistoryBossManage::Load(SDL_Renderer* screen)
 
 	//load bigwarning
 	success = min(success, mBigWarning.LoadFromFile("BossPrehistory/BigWarning.png", screen));
+	mBigWarning.LoadSound();
 
 	//load boss
 	success = min(success, mBoss.LoadFromFile("BossPrehistory/mammouth.png", screen));
 	mBoss.SetRect(64 * 20, 64 * 4);
 	//load Boss Sound
-	//mBoss.LoadSound();
+	mBoss.LoadSound();
 
 	//load water1
 	for (int i = 0; i < 10; ++i)
 	{
 		success = min(success, mWater1[i].LoadFromFile("BossPrehistory/water1.png", screen));
+		mWater1[i].reset();
 		mWater1[i].SetRect(0, 64*i);
 	}
 
@@ -516,13 +560,25 @@ bool PrehistoryBossManage::Load(SDL_Renderer* screen)
 	for (int i = 0; i < 10; ++i)
 	{
 		success = min(success, mWarning[i].LoadFromFile("BossPrehistory/warning.png", screen));
+		mWarning[i].reset();
+		mWarning[i].loadSound();
 		mWarning[i].SetRect(64*19,64*i);
 	}
 
 	//load sand
 	success = min(success, mSand.LoadFromFile("BossPrehistory/sand.png", screen));
 
+	mWater1Sound = Mix_LoadWAV("Music/water1.wav");
+
+	mWater2Sound = Mix_LoadWAV("Music/water2.wav");
+
 	dem_score = 0;
+
+	water2sound_dem = 0;
+
+	so_luot = 0;
+
+	luot_angry = 0;
 
 	return success;
 }
@@ -634,6 +690,10 @@ void PrehistoryBossManage::HandleEvent(SDL_Renderer* screen)
 		// attack with water1
 		else if (manage_status == water1_motion)
 		{
+			if (manage_status != last_manage_status)
+			{
+				Mix_PlayChannel(-1, mWater1Sound, 0);
+			}
 			last_manage_status = water1_motion;
 			for (int i = 0; i < 10; ++i)
 			{
@@ -659,6 +719,11 @@ void PrehistoryBossManage::HandleEvent(SDL_Renderer* screen)
 			}
 			else
 			{
+				water2sound_dem++;
+				if(water2sound_dem == 1)
+				{
+					Mix_PlayChannel(-1, mWater2Sound, 0);
+				}
 				for (int i = 0; i < 40; ++i)
 				{
 					mWater2[i].HandleEvent(screen, manage_status);
@@ -668,6 +733,7 @@ void PrehistoryBossManage::HandleEvent(SDL_Renderer* screen)
 				{
 					manage_status = boss_go_right;
 					so_luot = 0;
+					water2sound_dem = 0;
 				}
 			}
 			last_attack = water2_motion;
