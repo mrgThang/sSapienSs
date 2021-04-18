@@ -187,6 +187,10 @@ private:
 	int new_member_line;
 	
 	bool press_esc;
+
+	int dem_music;
+
+	Mix_Chunk *mVotay;
 };
 
 #endif

@@ -309,6 +309,8 @@ ScoreBoardManage::~ScoreBoardManage()
 	}
 	mCurrentScore.free();
 	mCurrentName.free();
+	Mix_FreeChunk(mVotay);
+	mVotay = NULL;
 }
 
 bool ScoreBoardManage::Load(SDL_Renderer* screen)
@@ -324,6 +326,10 @@ bool ScoreBoardManage::Load(SDL_Renderer* screen)
 	status = increase_score;
 
 	current_score = -50;
+
+	dem_music = 0;
+
+	mVotay = Mix_LoadWAV("Music/Votay.wav");
 
 	for(int i = 0; i < 3; ++i)
 	up_member_status[i] = stay;
@@ -487,6 +493,11 @@ void ScoreBoardManage::HandleEvent(SDL_Renderer* screen)
 
 	else if (status == congratulations)
 	{
+		dem_music++;
+		if (dem_music == 1)
+		{
+			Mix_PlayChannel(-1, mVotay, 0);
+		}
 		if (SCORE > data[2].first)
 		{
 			std::ofstream ofs("Data/data.txt");

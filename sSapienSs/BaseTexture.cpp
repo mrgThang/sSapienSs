@@ -101,7 +101,7 @@ bool BaseTexture::LoadFromRenderedText(std::string textureText, SDL_Color textCo
 	}
 
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid(my_font, textureText.c_str(), textColor);
+	SDL_Surface* textSurface = TTF_RenderText_Blended(my_font, textureText.c_str(), textColor);
 	if (textSurface == NULL)
 	{
 		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());

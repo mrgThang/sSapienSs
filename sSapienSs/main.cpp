@@ -18,18 +18,148 @@ const enum
 	run_score_board = 4,
 	run_normal_prehistory = 5,
 	run_boss_prehistory = 6,
-	openword = 7,
-	closeword = 8
+	run_open_word = 7,
+	run_close_word = 8,
+	run_mid_word = 9,
+	run_continue = 10
 };
 
 void Run_Open_Word()
 {
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
 
+	int dw = 0;
+
+	if (dem >= 100)
+	{
+		//load text;
+		SDL_Color textColor = { 255,255,255 };
+		std::ifstream ifsw("word/word1.txt");
+		std::string s = "  ";
+		while (getline(ifsw, s))
+		{
+			dw++;
+			gWord[dw].LoadFromRenderedText(s, textColor, gRenderer);
+			gWord[dw].Render(gRenderer, 64, dw * 64);
+		}
+
+		//load text;
+		std::ifstream ifsw2("word/word2.txt");
+		while (getline(ifsw2, s))
+		{
+			dw++;
+			gWord[dw].LoadFromRenderedText(s, textColor, gRenderer);
+			gWord[dw].Render(gRenderer, 64, 64 + dw * 64);
+		}
+
+		int sang;
+		if ((dem / 150) % 2 == 0)sang = dem % 150;
+		else sang = 150 - dem % 150;
+		SDL_Color textColor3 = { 255,255,255,sang };
+		std::ifstream ifsw3("word/word3.txt");
+		getline(ifsw3, s);
+		gWord[9].LoadFromRenderedText(s, textColor3, gRenderer);
+		if(sang != 0)gWord[9].Render(gRenderer, 64, 64 * 10);
+
+		const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+		if (currentKeyStates[SDL_SCANCODE_SPACE])
+		{
+			screen_status = run_normal_prehistory;
+			dem = 0;
+		}
+	}
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
+}
+
+void Run_Mid_Word()
+{
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
+
+	int dw = 0;
+
+	if (dem >= 100)
+	{
+		//load text;
+		SDL_Color textColor = { 255,255,255 };
+		std::ifstream ifsw("word/word4.txt");
+		std::string s = "  ";
+		while (getline(ifsw, s))
+		{
+			dw++;
+			gWord[dw].LoadFromRenderedText(s, textColor, gRenderer);
+			gWord[dw].Render(gRenderer, 64, dw * 64);
+		}
+	
+		int sang;
+		if ((dem / 150) % 2 == 0)sang = dem % 150;
+		else sang = 150 - dem % 150;
+		SDL_Color textColor3 = { 255,255,255,sang };
+		std::ifstream ifsw3("word/word3.txt");
+		getline(ifsw3, s);
+		gWord[9].LoadFromRenderedText(s, textColor3, gRenderer);
+		if (sang != 0)gWord[9].Render(gRenderer, 64, 64 * 10);
+
+		const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+		if (currentKeyStates[SDL_SCANCODE_SPACE])
+		{
+			screen_status = run_boss_prehistory;
+			dem = 0;
+		}
+	}
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
 }
 
 void Run_Close_Word()
 {
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
 
+	int dw = 0;
+
+	if (dem >= 100)
+	{
+		//load text;
+		SDL_Color textColor = { 255,255,255 };
+		std::ifstream ifsw("word/word5.txt");
+		std::string s = "  ";
+		while (getline(ifsw, s))
+		{
+			dw++;
+			gWord[dw].LoadFromRenderedText(s, textColor, gRenderer);
+			gWord[dw].Render(gRenderer, 64, dw * 64);
+		}
+
+		int sang;
+		if ((dem / 150) % 2 == 0)sang = dem % 150;
+		else sang = 150 - dem % 150;
+		SDL_Color textColor3 = { 255,255,255,sang };
+		std::ifstream ifsw3("word/word3.txt");
+		getline(ifsw3, s);
+		gWord[9].LoadFromRenderedText(s, textColor3, gRenderer);
+		if (sang != 0)gWord[9].Render(gRenderer, 64, 64 * 10);
+
+		const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+		if (currentKeyStates[SDL_SCANCODE_SPACE])
+		{
+			screen_status = run_continue;
+			dem = 0;
+		}
+	}
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
 }
 
 void Run_Menu()
@@ -91,7 +221,7 @@ void Run_Typing_Name()
 
 	if (gTypingManage.ReturnOver() == 1)
 	{
-		screen_status = run_normal_prehistory;
+		screen_status = run_open_word;
 		dem = 0;
 	}
     
@@ -138,8 +268,29 @@ void Run_Game_Over()
 	}
 }
 
+void Run_Continue()
+{
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
+
+	//Render background
+	gBackground.Render(gRenderer, 0, 0);
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
+
+	if (dem >= 200)
+	{
+		screen_status = run_score_board;
+		dem = 0;
+	}
+}
+
 void Run_Normal_Prehistory()
 {
+
+	std::cout << MYHP << std::endl;
 
 	bool pause_status = gControlGameManage.GetStatus();
 
@@ -315,12 +466,22 @@ void Run_Normal_Prehistory()
 		gControlGameManage.HandleEvent(gRenderer, key[32]);
     }
 
+	if (dem < 500)
+	{
+		std::string s;
+		SDL_Color textColor3 = { 255,255,255 };
+		std::ifstream ifsw3("word/word6.txt");
+		getline(ifsw3, s);
+		gWord[9].LoadFromRenderedText(s, textColor3, gRenderer);
+		gWord[9].Render(gRenderer, 64, 64 * 10);
+	}
+
 	//Update screen
 	SDL_RenderPresent(gRenderer);
 
 	if (gGate.ChangeMap() == 1)
 	{
-		screen_status = run_boss_prehistory;
+		screen_status = run_mid_word;
 		dem = 0;
 	}
 
@@ -453,7 +614,7 @@ void Run_Boss_Prehistory()
 
 	if (gGate.ChangeMap() == 1)
 	{
-		screen_status = run_score_board;
+		screen_status = run_close_word;
 		dem = 0;
 	}
 
@@ -498,6 +659,59 @@ int main(int argc, char* argv[])
 				{
 					if (gEvent.key.keysym.sym == i)key[i] = 1;
 				}
+			}
+		}
+
+		if (screen_status == run_open_word)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Open_Word())is_quit = true;
+			}
+			else if (dem >= 5)
+			{
+				Run_Open_Word();
+			}
+		}
+
+		if (screen_status == run_mid_word)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Mid_Word())is_quit = true;
+			}
+			else if (dem >= 5)
+			{
+				Run_Mid_Word();
+			}
+		}
+
+		if (screen_status == run_close_word)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Close_Word())is_quit = true;
+			}
+			else if (dem >= 5)
+			{
+				Run_Close_Word();
+			}
+		}
+
+		if (screen_status == run_continue)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Continue())is_quit = true;
+				Mix_PlayChannel(-1, gButtonSound, 0);
+			}
+			else if (dem >= 5)
+			{
+				Run_Continue();
 			}
 		}
 
@@ -577,7 +791,7 @@ int main(int argc, char* argv[])
 			}
 			else if (dem >= 5)
 			{
-				dem = 5;
+				if (dem >= 500)dem = 500;
 				Run_Normal_Prehistory();
 			}
 		}

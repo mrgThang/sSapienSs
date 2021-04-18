@@ -55,6 +55,7 @@ TypingManage gTypingManage;
 ScoreBoardManage gScoreBoardManage;
 Mix_Music* gMusic = NULL;
 Mix_Chunk* gButtonSound = NULL;
+BaseTexture gWord[10];
 
 bool init()
 {
@@ -170,6 +171,7 @@ void free_texture()
 	gMusic = NULL;
 	Mix_FreeChunk(gButtonSound);
 	gButtonSound = NULL;
+	for(int i = 0 ; i < 10; ++i)gWord[i].free();
 }
 
 void close()
@@ -186,6 +188,36 @@ void close()
 	SDL_Quit();
 	TTF_Quit();
 	Mix_Quit();
+}
+
+bool Load_Open_Word()
+{
+	bool success = 1;
+
+	for (int i = 0; i < 10; ++i)
+		success = min(success, gWord[i].LoadFont("font/word1.ttf", 30));
+
+	return success;
+}
+
+bool Load_Mid_Word()
+{
+	bool success = 1;
+
+	for(int i = 0; i < 10; ++i)
+	success = min(success, gWord[i].LoadFont("font/word1.ttf", 30));
+
+	return success;
+}
+
+bool Load_Close_Word()
+{
+	bool success = 1;
+
+	for (int i = 0; i < 10; ++i)
+		success = min(success, gWord[i].LoadFont("font/word1.ttf", 30));
+
+	return success;
 }
 
 bool Load_Typing_Name()
@@ -427,6 +459,19 @@ bool Load_Game_Over()
 
 	//load gameover background
 	success = min(success, gBackground.LoadFromFile("background/GameOver.png", gRenderer));
+
+	return success;
+}
+
+bool Load_Continue()
+{
+	bool success = 1;
+
+	//load music
+	gButtonSound = Mix_LoadWAV("Music/Continue.wav");
+
+	//load gameover background
+	success = min(success, gBackground.LoadFromFile("background/Continue.png", gRenderer));
 
 	return success;
 }
