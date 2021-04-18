@@ -289,9 +289,6 @@ void Run_Continue()
 
 void Run_Normal_Prehistory()
 {
-
-	std::cout << MYHP << std::endl;
-
 	bool pause_status = gControlGameManage.GetStatus();
 
 	if (pause_status == 0)
