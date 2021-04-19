@@ -21,8 +21,54 @@ const enum
 	run_open_word = 7,
 	run_close_word = 8,
 	run_mid_word = 9,
-	run_continue = 10
+	run_continue = 10,
+	run_option
 };
+
+void Run_Option()
+{
+	//clear screen
+	SDL_SetRenderDrawColor(gRenderer, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+	SDL_RenderClear(gRenderer);
+
+	//Render background
+	gBackground.Render(gRenderer, 0, 0);
+
+	//render button
+	gEasy.SetRect(7 * 64,  4 * 64);
+	gMedium.SetRect(7*64, 6 * 64+32);
+	gHard.SetRect(7 * 64, 9 * 64);
+	gEasy.HandleEvent(gRenderer, &gEvent);
+	gMedium.HandleEvent(gRenderer, &gEvent);
+	gHard.HandleEvent(gRenderer, &gEvent);
+
+	//Update screen
+	SDL_RenderPresent(gRenderer);
+
+	if (gEasy.ReturnPressState() == 1)
+	{
+		Mix_PlayChannel(-1, gButtonSound, 0);
+		HARD = 3;
+		screen_status = run_menu;
+		dem = 0;
+	}
+
+	if (gMedium.ReturnPressState() == 1)
+	{
+		Mix_PlayChannel(-1, gButtonSound, 0);
+		HARD = 2;
+		screen_status = run_menu;
+		dem = 0;
+	}
+
+	if (gHard.ReturnPressState() == 1)
+	{
+		Mix_PlayChannel(-1, gButtonSound, 0);
+		HARD = 1;
+		screen_status = run_menu;
+		dem = 0;
+	}
+}
 
 void Run_Open_Word()
 {
@@ -195,6 +241,8 @@ void Run_Menu()
 	if (gOptionButton.ReturnPressState() == 1)
 	{
 		Mix_PlayChannel(-1, gButtonSound, 0);
+		screen_status = run_option;
+		dem = 0;
 	}
 
 	if (gExitButton.ReturnPressState() == 1)
@@ -330,7 +378,7 @@ void Run_Normal_Prehistory()
 				{
 					if (bonusHP[i] == 0)
 					{
-						if (MYHP < 3)MYHP++;
+						if (MYHP < HARD)MYHP++;
 						bonusHP[i] = 1;
 						SCORE += 10;
 					}
@@ -627,6 +675,9 @@ int main(int argc, char* argv[])
 	//initialize
 	if (init() == false)return -1;
 
+	//hard
+	HARD = 3;
+
 	//dieu kien quit
 	bool is_quit = false;
 
@@ -728,6 +779,21 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		if (screen_status == run_option)
+		{
+			dem++;
+			if (dem == 1)
+			{
+				if (!Load_Option()) is_quit = true;
+			}
+			else if (dem >= 5)
+			{
+				dem = 5;
+				SCORE = 0;
+				Run_Option();
+			}
+		}
+
 		if (screen_status == run_typing_name)
 		{
 			dem++;
@@ -778,7 +844,7 @@ int main(int argc, char* argv[])
 			{
 				if (!Load_NorMal_Prehistory_Map()) is_quit = true;
 				hero_jump_condition = 0;
-				MYHP = 3;
+				MYHP = HARD;
 				gHero.TakeHP(MYHP,0);
 				memset(detect, 0, sizeof(detect));
 				gGate.Start();

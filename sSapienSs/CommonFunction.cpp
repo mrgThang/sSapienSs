@@ -28,3 +28,5 @@ std::vector<int> Weapon;
 int SCORE = 0;
 
 std::string NAME;
+
+int HARD;

@@ -56,6 +56,9 @@ ScoreBoardManage gScoreBoardManage;
 Mix_Music* gMusic = NULL;
 Mix_Chunk* gButtonSound = NULL;
 BaseTexture gWord[10];
+Button gHard;
+Button gMedium;
+Button gEasy;
 
 bool init()
 {
@@ -172,6 +175,9 @@ void free_texture()
 	Mix_FreeChunk(gButtonSound);
 	gButtonSound = NULL;
 	for(int i = 0 ; i < 10; ++i)gWord[i].free();
+	gHard.free();
+	gMedium.free();
+	gEasy.free();
 }
 
 void close()
@@ -435,6 +441,23 @@ bool Load_Menu()
 
 	//load manage animation menu
 	success = min(success, gMenuManage.Load(gRenderer));
+
+	return success;
+}
+
+bool Load_Option()
+{
+	bool success = 1;
+
+	gBackground.LoadFromFile("background/Option.png", gRenderer);
+	
+	gButtonSound = Mix_LoadWAV("Music/Button.wav");
+
+	success = min(success, gHard.LoadFromFile("Button/Hard.png", gRenderer));
+
+	success = min(success, gMedium.LoadFromFile("Button/Medium.png", gRenderer));
+
+	success = min(success, gEasy.LoadFromFile("Button/Easy.png", gRenderer));
 
 	return success;
 }

@@ -85,4 +85,6 @@ extern int SCORE;
 
 extern std::string NAME;
 
+extern int HARD;
+
 #endif
