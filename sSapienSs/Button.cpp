@@ -18,7 +18,7 @@ void Button::HandleEvent(SDL_Renderer* screen, SDL_Event *e)
 	{
 		int x, y;
 		SDL_GetMouseState(&x, &y);
-		if (x < my_rect.x || x > my_rect.x + my_rect.w || y < my_rect.y || y > my_rect.y + my_rect.h)
+		if (x < my_rect.x || x > my_rect.x + my_rect.w/2 || y < my_rect.y || y > my_rect.y + my_rect.h)
 		{
 			status = 1;
 		}
