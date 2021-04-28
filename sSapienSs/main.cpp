@@ -716,6 +716,8 @@ int main(int argc, char* argv[])
 			if (dem == 1)
 			{
 				if (!Load_Open_Word())is_quit = true;
+				std::string n;
+				if (n == NAME)NAME = "guest";
 			}
 			else if (dem >= 5)
 			{
